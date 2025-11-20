@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Library</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR CONTAINER (Reused from dashboard) -->
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="workout.html">Workout</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="community.html">Community</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+        <div class="auth-status">
+            <span id="welcome-message" class="hidden-initial">Hi admin</span>
+            <a href="login.html" id="login-link" class="hidden-initial">Login</a>
+            <a href="#" id="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dashboard-content workout-page">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> / Workout Library
+        </div>
+        
+        <h1 class="main-heading">Find Your Next Workout</h1>
+
+        <!-- Search and Filter Section -->
+        <section class="filter-bar">
+            <!-- Added title for accessibility -->
+            <input type="text" id="search-input" placeholder="Search by name or muscle group (e.g., chest, yoga)" title="Search Workouts">
+            
+            <!-- FIX: Added title attribute -->
+            <select id="difficulty-filter" title="Filter by Difficulty Level">
+                <option value="">All Difficulty</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+            
+            <!-- FIX: Added title attribute -->
+            <select id="duration-filter" title="Filter by Duration">
+                <option value="">All Duration</option>
+                <option value="15">Under 15 min</option>
+                <option value="30">15 - 30 min</option>
+                <option value="60">Over 30 min</option>
+            </select>
+        </section>
+
+        <!-- Video Gallery Grid -->
+        <section class="video-gallery">
+            <h2 class="section-title">Video Library</h2>
+            <div id="workout-grid" class="data-grid">
+                <!-- Video cards will be dynamically inserted here by JavaScript -->
+                <p id="loading-message">Loading workout videos...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER (Reused) -->
+    <footer class="app-footer">
+        <div class="footer-inner-content">
+            <div class="footer-left">
+                <div class="logo">MyFitnessApp</div>
+                <p>Losing weight isn't easy - we know. But with MyFitnessApp, you'll get the tools you need to successfully...</p>
+            </div>
+            
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>SPECIAL THANKS TO</h4>
+                    <p><a href="#">myfitnesspal.com</a></p>
+                    <p><a href="#">muscleandstrength.com</a></p>
+                    <p><a href="#">bodybuilding.com</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>USEFUL LINKS</h4>
+                    <p><a href="#">Open Source System</a></p>
+                    <p><a href="#">YouTube Terms of Service</a></p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>CONTACT</h4>
+                    <p>Dimitrovgrad, Bulgaria</p>
+                    <p>info@myfitness-app.com</p>
+                    <p>+ 000 000 000 000</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Link JS for Navbar and workout logic -->
+    <script src="js/dashboard.js"></script> 
+    <script src="js/workouts.js"></script>
+</body>
+</html>

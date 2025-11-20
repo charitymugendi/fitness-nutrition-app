@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR CONTAINER (Reused from dashboard) -->
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="workout.html">Workout</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="community.html">Community</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+        <div class="auth-status">
+            <span id="welcome-message" class="hidden-initial">Hi admin</span>
+            <a href="login.html" id="login-link" class="hidden-initial">Login</a>
+            <a href="#" id="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN PROFILE CONTENT AREA -->
+    <main class="dashboard-content profile-page">
+        <!-- Breadcrumb / Header -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> / My Profile
+        </div>
+        
+        <!-- PROFILE GRID CONTAINER -->
+        <div class="profile-grid">
+            
+            <!-- LEFT COLUMN: User Info and Actions -->
+            <aside class="profile-sidebar">
+                <div class="profile-card user-info-box">
+                    <!-- Placeholder for User Image -->
+                    <div class="profile-image-container">
+                        <!-- Replace with a real user image source -->
+                        <img src="https://placehold.co/150x150/007bff/white?text=User" alt="User Profile Image" class="profile-image">
+                    </div>
+                    <h2 class="username">admin</h2>
+
+                    <!-- Follower/Following Metrics -->
+                    <div class="social-metrics">
+                        <button class="metric-button">Following</button>
+                        <button class="metric-button">Followers</button>
+                    </div>
+
+                    <!-- Edit and Diary Buttons -->
+                    <div class="action-buttons">
+                        <button class="edit-button secondary">Edit profile</button>
+                        <button class="edit-button secondary">Edit image</button>
+                        <button class="diary-button primary">My exercise diary</button>
+                        <button class="diary-button primary">My food diary</button>
+                    </div>
+                </div>
+
+                <!-- About Me Section -->
+                <div class="profile-card about-me-box">
+                    <h3 class="section-title">About me</h3>
+                    <p class="section-content">I am the admin</p>
+                </div>
+
+                <!-- Why I want to get in shape Section -->
+                <div class="profile-card about-me-box">
+                    <h3 class="section-title">Why I want to get in shape</h3>
+                    <p class="section-content">To be the best looking admin</p>
+                </div>
+            </aside>
+            
+            <!-- RIGHT COLUMN: Detailed Metrics Table -->
+            <section class="profile-details-table">
+                <div class="profile-card metrics-box">
+                    <!-- Data will be inserted here by JavaScript -->
+                    <div id="user-metrics">
+                        <div class="metric-row">
+                            <span class="metric-label">Full name</span>
+                            <span class="metric-value" id="full-name">Plamen Dobrev</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">E-mail</span>
+                            <span class="metric-value" id="email">admin@admin.com</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Gender</span>
+                            <span class="metric-value" id="gender">Male</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Activity level</span>
+                            <span class="metric-value" id="activity-level">Active</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Current weight</span>
+                            <span class="metric-value" id="current-weight">75.00 kg</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Goal weight</span>
+                            <span class="metric-value" id="goal-weight">80.00 kg</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Height</span>
+                            <span class="metric-value" id="height">175.00 cm</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Neck</span>
+                            <span class="metric-value" id="neck">46.00 cm</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Waist</span>
+                            <span class="metric-value" id="waist">60.00 cm</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Hips</span>
+                            <span class="metric-value" id="hips">90.00 cm</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Daily protein intake goal</span>
+                            <span class="metric-value" id="protein-goal">200.00 gr</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- FOOTER (Reused from index.html) -->
+    <footer class="app-footer">
+        <div class="footer-inner-content">
+            <div class="footer-left">
+                <div class="logo">MyFitnessApp</div>
+                <p>Losing weight isn't easy - we know. But with MyFitnessApp, you'll get the tools you need to successfully...</p>
+            </div>
+            
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>SPECIAL THANKS TO</h4>
+                    <p><a href="#">myfitnesspal.com</a></p>
+                    <p><a href="#">muscleandstrength.com</a></p>
+                    <p><a href="#">bodybuilding.com</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>USEFUL LINKS</h4>
+                    <p><a href="#">Open Source System</a></p>
+                    <p><a href="#">YouTube Terms of Service</a></p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>CONTACT</h4>
+                    <p>Dimitrovgrad, Bulgaria</p>
+                    <p>info@myfitness-app.com</p>
+                    <p>+ 000 000 000 000</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="js/dashboard.js"></script> 
+    <script src="js/profile.js"></script> <!-- NEW SCRIPT FOR PROFILE LOGIC -->
+</body>
+</html>

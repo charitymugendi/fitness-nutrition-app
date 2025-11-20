@@ -1,0 +1,12 @@
+{
+  "name": "fitness-nutrition-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}

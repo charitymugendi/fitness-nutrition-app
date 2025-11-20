@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Discussions</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR CONTAINER (Reused) -->
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="workout.html">Workout</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="community.html">Community</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+        <div class="auth-status">
+            <span id="welcome-message" class="hidden-initial">Hi admin</span>
+            <a href="login.html" id="login-link" class="hidden-initial">Login</a>
+            <a href="#" id="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dashboard-content community-page">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> / Community Forum
+        </div>
+        
+        <h1 class="main-heading">Community Support and Discussions</h1>
+
+        <div class="community-grid">
+            <!-- LEFT COLUMN: New Post Form & Filters -->
+            <aside class="community-sidebar">
+                <div class="profile-card new-post-box">
+                    <h3>Create a New Post</h3>
+                    <form id="new-post-form" class="post-form">
+                        <input type="text" id="post-title" placeholder="Topic Title (e.g., Best protein for recovery)" required title="Post Title">
+                        
+                        <select id="post-category" required title="Post Category">
+                            <option value="">Select Category</option>
+                            <option value="nutrition">Nutrition</option>
+                            <option value="workout">Workouts</option>
+                            <option value="motivation">Motivation</option>
+                            <option value="general">General</option>
+                        </select>
+
+                        <textarea id="post-content" placeholder="Share your thoughts or ask a question..." required title="Post Content"></textarea>
+                        
+                        <button type="submit" class="diary-button primary">Post to Forum</button>
+                    </form>
+                </div>
+
+                <div class="profile-card filter-box">
+                    <h3>Filter Discussions</h3>
+                    <div id="category-filters" class="category-filters">
+                        <button class="filter-btn active" data-category="all">All Topics</button>
+                        <button class="filter-btn" data-category="nutrition">Nutrition</button>
+                        <button class="filter-btn" data-category="workout">Workouts</button>
+                        <button class="filter-btn" data-category="motivation">Motivation</button>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- RIGHT COLUMN: Discussion List -->
+            <section class="discussion-area">
+                <div id="discussion-list" class="discussion-list">
+                    <!-- Posts will be loaded here by JavaScript -->
+                    <p id="posts-loading-message">Loading discussion threads...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER (Reused) -->
+    <footer class="app-footer">
+        <div class="footer-inner-content">
+            <div class="footer-left">
+                <div class="logo">MyFitnessApp</div>
+                <p>Losing weight isn't easy - we know. But with MyFitnessApp, you'll get the tools you need to successfully...</p>
+            </div>
+            
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>SPECIAL THANKS TO</h4>
+                    <p><a href="#">myfitnesspal.com</a></p>
+                    <p><a href="#">muscleandstrength.com</a></p>
+                    <p><a href="#">bodybuilding.com</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>USEFUL LINKS</h4>
+                    <p><a href="#">Open Source System</a></p>
+                    <p><a href="#">YouTube Terms of Service</a></p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>CONTACT</h4>
+                    <p>Dimitrovgrad, Bulgaria</p>
+                    <p>info@myfitness-app.com</p>
+                    <p>+ 000 000 000 000</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/dashboard.js"></script> 
+    <script src="js/community.js"></script> <!-- NEW SCRIPT for community logic -->
+</body>
+</html>

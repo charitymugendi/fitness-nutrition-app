@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR CONTAINER -->
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+
+        <!-- Main Navigation Links -->
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="workout.html">Workout</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="community.html">Community</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+
+        <!-- User Status/Auth Links (Inline styles removed, using CSS class) -->
+        <div class="auth-status">
+            <!-- Hidden by default via CSS -->
+            <span id="welcome-message" class="hidden-initial">Hi admin</span>
+            
+            <!-- Visible by default -->
+            <a href="login.html" id="login-link">Login</a>
+            
+            <!-- Hidden by default via CSS -->
+            <a href="#" id="logout-link" class="hidden-initial">Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dashboard-content">
+        <h1>Welcome to MyFitnessApp</h1>
+        <img src="img/anatomy-chart.png" alt="Labeled Human Anatomy for Exercise" class="anatomy-image">
+
+        <section id="workouts">
+            <h2>Workouts</h2>
+            <div id="workoutList" class="data-grid">
+                <!-- Workout cards will be inserted here by JavaScript -->
+            </div>
+        </section>
+
+        <section id="nutrition">
+            <h2>Nutrition Tips</h2>
+            <div id="nutritionList" class="data-grid">
+                <!-- Nutrition tips will be inserted here by JavaScript -->
+            </div>
+        </section>
+    </main>
+    </main>
+    
+    <!-- 3. FOOTER -->
+    <footer class="app-footer">
+        <div class="footer-section footer-logo">
+            <h3>MyFitnessApp</h3>
+            <p>&copy; 2024 MyFitnessApp. All rights reserved.</p>
+            <p class="tagline">Your partner in health and progress.</p>
+        </div>
+
+        <div class="footer-section footer-links">
+            <h4>Quick Links</h4>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+            <a href="support.html">Help & Support</a>
+        </div>
+
+        <div class="footer-section footer-legal">
+            <h4>Legal</h4>
+            <a href="terms.html">Terms of Service</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="sitemap.html">Sitemap</a>
+        </div>
+    </footer>
+
+    <!-- ... rest of your code ... -->
+
+    <script src="js/dashboard.js"></script>
+    <!-- Note: auth.js is not needed here as dashboard.js handles the auth check -->
+</body>
+</html>

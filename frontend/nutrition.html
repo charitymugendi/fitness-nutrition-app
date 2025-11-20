@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Food Diary</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR CONTAINER (Reused from dashboard) -->
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="workout.html">Workout</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="community.html">Community</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+        <div class="auth-status">
+            <span id="welcome-message" class="hidden-initial">Hi admin</span>
+            <a href="login.html" id="login-link" class="hidden-initial">Login</a>
+            <a href="#" id="logout-link">Logout</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dashboard-content nutrition-page">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> / Food Diary
+        </div>
+        
+        <h1 class="main-heading">Daily Food Log</h1>
+
+        <!-- Daily Goal Summary (Where total calories/macros will go) -->
+        <section class="goal-summary profile-card">
+            <h2>Today's Goals Summary</h2>
+            <div id="goal-metrics" class="metrics-summary">
+                <p>Calories: <span id="cal-progress">0 / 2000</span></p>
+                <p>Protein: <span id="protein-progress">0 / 150g</span></p>
+                <p>Carbs: <span id="carb-progress">0 / 250g</span></p>
+                <p>Fat: <span id="fat-progress">0 / 70g</span></p>
+            </div>
+        </section>
+
+        <div class="nutrition-grid">
+            <!-- 1. ADD FOOD FORM -->
+            <aside class="add-food-sidebar">
+                <div class="profile-card">
+                    <h3>Add Food Entry</h3>
+                    <form id="food-entry-form" class="food-form">
+                        <input type="text" id="food-name" placeholder="Food Name (e.g., Chicken Breast)" required title="Food Name">
+                        <input type="number" id="calories" placeholder="Calories (kcal)" required min="1" title="Calories">
+                        <input type="number" id="protein" placeholder="Protein (g)" required min="0" title="Protein">
+                        <input type="number" id="carbs" placeholder="Carbohydrates (g)" required min="0" title="Carbohydrates">
+                        <input type="number" id="fat" placeholder="Fat (g)" required min="0" title="Fat">
+                        <select id="meal-type" required title="Meal Type">
+                            <option value="">Select Meal Type</option>
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                            <option value="snack">Snack</option>
+                        </select>
+                        <button type="submit" class="diary-button primary">Log Meal</button>
+                    </form>
+                </div>
+            </aside>
+            
+            <!-- 2. DAILY LOG DISPLAY -->
+            <section class="daily-log-display">
+                <h2>Your Log</h2>
+                <div id="daily-log-container">
+                    <!-- Food entries will be loaded here, grouped by meal type -->
+                    <p id="log-loading-message">Loading today's entries...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER (Reused) -->
+    <footer class="app-footer">
+        <div class="footer-inner-content">
+            <div class="footer-left">
+                <div class="logo">MyFitnessApp</div>
+                <p>Losing weight isn't easy - we know. But with MyFitnessApp, you'll get the tools you need to successfully...</p>
+            </div>
+            
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>SPECIAL THANKS TO</h4>
+                    <p><a href="#">myfitnesspal.com</a></p>
+                    <p><a href="#">muscleandstrength.com</a></p>
+                    <p><a href="#">bodybuilding.com</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>USEFUL LINKS</h4>
+                    <p><a href="#">Open Source System</a></p>
+                    <p><a href="#">YouTube Terms of Service</a></p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>CONTACT</h4>
+                    <p>Dimitrovgrad, Bulgaria</p>
+                    <p>info@myfitness-app.com</p>
+                    <p>+ 000 000 000 000</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/dashboard.js"></script> 
+    <script src="js/nutrition.js"></script> <!-- NEW SCRIPT for nutrition specific logic -->
+</body>
+</html>
