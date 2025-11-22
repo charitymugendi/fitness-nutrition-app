@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Diary | MyFitnessApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .food-diary-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            color: #e84393;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .subtext {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #e84393, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+
+        /* Date selector */
+        .date-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .date-btn {
+            background: white;
+            border: 1px solid #e84393;
+            color: #e84393;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-btn:hover {
+            background: #e84393;
+            color: white;
+        }
+
+        .current-date {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        /* Meal sections */
+        .meal-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .meal-title {
+            font-size: 1.4rem;
+            color: #e84393;
+            font-weight: 600;
+        }
+
+        .meal-calories {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .add-food-btn {
+            background: #e84393;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-food-btn:hover {
+            background: #d63384;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Food items */
+        .food-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .food-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .food-item:hover {
+            background: #f1f3f5;
+        }
+
+        .food-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .food-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .food-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .food-nutrition {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nutrition-value {
+            text-align: center;
+        }
+
+        .nutrition-label {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .nutrition-amount {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .food-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+
+        .action-btn:hover {
+            color: #e84393;
+        }
+
+        /* Nutrition summary */
+        .nutrition-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .summary-header {
+            font-size: 1.4rem;
+            color: #e84393;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .macros-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .macro-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .macro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .macro-title {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .macro-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .macro-target {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .calories-progress {
+            margin-top: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #e84393;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .empty-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            color: #e84393;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #e84393;
+        }
+
+        .modal-body {
+            padding: 0;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Tab Styles */
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #e84393;
+            border-bottom-color: #e84393;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Search Tab */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #e84393;
+        }
+
+        .food-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .food-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .food-option:hover {
+            background: #f8f9fa;
+            border-color: #e84393;
+        }
+
+        .food-option.selected {
+            background: #fce4ec;
+            border-color: #e84393;
+        }
+
+        .food-option-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .food-option-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .food-option-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .food-option-nutrition {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nutrition-pill {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Manual Entry Tab */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #e84393;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .serving-size {
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .serving-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .serving-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .add-btn {
+            background: #e84393;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: #d63384;
+        }
+
+        /* Navigation Styles */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e84393;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #e84393;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e84393;
+            border-radius: 2px;
+        }
+        
+        .auth-status {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-status a {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-status a:first-child {
+            background-color: #e84393;
+            color: white;
+        }
+        
+        .auth-status a:last-child {
+            border: 1px solid #e84393;
+            color: #e84393;
+        }
+        
+        .auth-status a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtext {
+                font-size: 1rem;
+            }
+            
+            .meal-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .food-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .food-nutrition {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .macros-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .food-option {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .food-option-nutrition {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .nutrition-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="workout.html">Workouts</a>
+            <a href="diet.html">Diet Plans</a>
+            <a href="food-diary.html" class="active">Food Diary</a>
+            <a href="tools.html">Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="auth-status">
+            <a href="signup.html">Register</a>
+            <a href="login.html">Login</a>
+        </div>
+    </header>
+
+    <section class="food-diary-section">
+        <div class="container">
+            <div class="header-content">
+                <h1>Food Diary</h1>
+                <p class="subtext">Track your daily nutrition, monitor your calorie intake, and stay on top of your health goals with our comprehensive food diary.</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Date Selector -->
+            <div class="date-selector">
+                <div class="date-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="current-date">Tuesday, March 19, 2024</div>
+                <div class="date-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <!-- Breakfast Section -->
+            <div class="meal-section">
+                <div class="meal-header">
+                    <div>
+                        <h2 class="meal-title">Breakfast</h2>
+                        <div class="meal-calories">420 calories</div>
+                    </div>
+                    <button class="add-food-btn" data-meal="breakfast">
+                        <i class="fas fa-plus"></i> Add Food
+                    </button>
+                </div>
+                <div class="food-items" id="breakfast-items">
+                    <div class="food-item">
+                        <div class="food-info">
+                            <div class="food-name">Oatmeal with Berries</div>
+                            <div class="food-details">1 bowl (250g) with mixed berries and honey</div>
+                        </div>
+                        <div class="food-nutrition">
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">320 cal</div>
+                                <div class="nutrition-label">Calories</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">12g</div>
+                                <div class="nutrition-label">Protein</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">58g</div>
+                                <div class="nutrition-label">Carbs</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">6g</div>
+                                <div class="nutrition-label">Fat</div>
+                            </div>
+                        </div>
+                        <div class="food-actions">
+                            <button class="action-btn"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="food-item">
+                        <div class="food-info">
+                            <div class="food-name">Black Coffee</div>
+                            <div class="food-details">1 cup (240ml)</div>
+                        </div>
+                        <div class="food-nutrition">
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">5 cal</div>
+                                <div class="nutrition-label">Calories</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">0g</div>
+                                <div class="nutrition-label">Protein</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">1g</div>
+                                <div class="nutrition-label">Carbs</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">0g</div>
+                                <div class="nutrition-label">Fat</div>
+                            </div>
+                        </div>
+                        <div class="food-actions">
+                            <button class="action-btn"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lunch Section -->
+            <div class="meal-section">
+                <div class="meal-header">
+                    <div>
+                        <h2 class="meal-title">Lunch</h2>
+                        <div class="meal-calories">580 calories</div>
+                    </div>
+                    <button class="add-food-btn" data-meal="lunch">
+                        <i class="fas fa-plus"></i> Add Food
+                    </button>
+                </div>
+                <div class="food-items" id="lunch-items">
+                    <div class="food-item">
+                        <div class="food-info">
+                            <div class="food-name">Grilled Chicken Salad</div>
+                            <div class="food-details">Mixed greens with 150g grilled chicken, vegetables, and vinaigrette</div>
+                        </div>
+                        <div class="food-nutrition">
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">420 cal</div>
+                                <div class="nutrition-label">Calories</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">35g</div>
+                                <div class="nutrition-label">Protein</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">12g</div>
+                                <div class="nutrition-label">Carbs</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">22g</div>
+                                <div class="nutrition-label">Fat</div>
+                            </div>
+                        </div>
+                        <div class="food-actions">
+                            <button class="action-btn"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="food-item">
+                        <div class="food-info">
+                            <div class="food-name">Whole Wheat Bread</div>
+                            <div class="food-details">2 slices</div>
+                        </div>
+                        <div class="food-nutrition">
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">160 cal</div>
+                                <div class="nutrition-label">Calories</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">6g</div>
+                                <div class="nutrition-label">Protein</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">30g</div>
+                                <div class="nutrition-label">Carbs</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">2g</div>
+                                <div class="nutrition-label">Fat</div>
+                            </div>
+                        </div>
+                        <div class="food-actions">
+                            <button class="action-btn"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dinner Section -->
+            <div class="meal-section">
+                <div class="meal-header">
+                    <div>
+                        <h2 class="meal-title">Dinner</h2>
+                        <div class="meal-calories">0 calories</div>
+                    </div>
+                    <button class="add-food-btn" data-meal="dinner">
+                        <i class="fas fa-plus"></i> Add Food
+                    </button>
+                </div>
+                <div class="food-items" id="dinner-items">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="empty-text">No foods added for dinner yet</div>
+                        <button class="add-food-btn" data-meal="dinner">
+                            <i class="fas fa-plus"></i> Add Your First Food
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snacks Section -->
+            <div class="meal-section">
+                <div class="meal-header">
+                    <div>
+                        <h2 class="meal-title">Snacks</h2>
+                        <div class="meal-calories">150 calories</div>
+                    </div>
+                    <button class="add-food-btn" data-meal="snacks">
+                        <i class="fas fa-plus"></i> Add Food
+                    </button>
+                </div>
+                <div class="food-items" id="snacks-items">
+                    <div class="food-item">
+                        <div class="food-info">
+                            <div class="food-name">Greek Yogurt</div>
+                            <div class="food-details">1 container (150g)</div>
+                        </div>
+                        <div class="food-nutrition">
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">150 cal</div>
+                                <div class="nutrition-label">Calories</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">15g</div>
+                                <div class="nutrition-label">Protein</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">8g</div>
+                                <div class="nutrition-label">Carbs</div>
+                            </div>
+                            <div class="nutrition-value">
+                                <div class="nutrition-amount">4g</div>
+                                <div class="nutrition-label">Fat</div>
+                            </div>
+                        </div>
+                        <div class="food-actions">
+                            <button class="action-btn"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nutrition Summary -->
+            <div class="nutrition-summary">
+                <h2 class="summary-header">Daily Nutrition Summary</h2>
+                
+                <div class="macros-container">
+                    <div class="macro-card">
+                        <div class="macro-title">Calories</div>
+                        <div class="macro-amount">1,150</div>
+                        <div class="macro-target">Target: 1,800</div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-title">Protein</div>
+                        <div class="macro-amount">68g</div>
+                        <div class="macro-target">Target: 90g</div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-title">Carbohydrates</div>
+                        <div class="macro-amount">109g</div>
+                        <div class="macro-target">Target: 225g</div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-title">Fat</div>
+                        <div class="macro-amount">34g</div>
+                        <div class="macro-target">Target: 60g</div>
+                    </div>
+                </div>
+                
+                <div class="calories-progress">
+                    <div class="progress-header">
+                        <div class="progress-label">Daily Calorie Progress</div>
+                        <div class="progress-label">1,150 / 1,800 (64%)</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 64%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Food Modal -->
+    <div class="modal-overlay" id="addFoodModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Food</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="search">Search Database</button>
+                    <button class="tab-btn" data-tab="manual">Manual Entry</button>
+                </div>
+                
+                <!-- Search Tab -->
+                <div class="tab-content active" id="search-tab">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search for food...">
+                    </div>
+                    <div class="food-options">
+                        <div class="food-option" data-food="scrambled-eggs">
+                            <div class="food-option-info">
+                                <div class="food-option-name">Scrambled Eggs</div>
+                                <div class="food-option-details">2 large eggs, cooked</div>
+                            </div>
+                            <div class="food-option-nutrition">
+                                <span class="nutrition-pill">180 cal</span>
+                                <span class="nutrition-pill">12g protein</span>
+                            </div>
+                        </div>
+                        <div class="food-option" data-food="avocado-toast">
+                            <div class="food-option-info">
+                                <div class="food-option-name">Avocado Toast</div>
+                                <div class="food-option-details">1 slice whole wheat bread with 1/2 avocado</div>
+                            </div>
+                            <div class="food-option-nutrition">
+                                <span class="nutrition-pill">250 cal</span>
+                                <span class="nutrition-pill">7g protein</span>
+                            </div>
+                        </div>
+                        <div class="food-option" data-food="protein-shake">
+                            <div class="food-option-info">
+                                <div class="food-option-name">Protein Shake</div>
+                                <div class="food-option-details">1 scoop whey protein with water</div>
+                            </div>
+                            <div class="food-option-nutrition">
+                                <span class="nutrition-pill">120 cal</span>
+                                <span class="nutrition-pill">24g protein</span>
+                            </div>
+                        </div>
+                        <div class="food-option" data-food="grilled-salmon">
+                            <div class="food-option-info">
+                                <div class="food-option-name">Grilled Salmon</div>
+                                <div class="food-option-details">150g fillet, grilled with olive oil</div>
+                            </div>
+                            <div class="food-option-nutrition">
+                                <span class="nutrition-pill">280 cal</span>
+                                <span class="nutrition-pill">34g protein</span>
+                            </div>
+                        </div>
+                        <div class="food-option" data-food="brown-rice">
+                            <div class="food-option-info">
+                                <div class="food-option-name">Brown Rice</div>
+                                <div class="food-option-details">1 cup cooked</div>
+                            </div>
+                            <div class="food-option-nutrition">
+                                <span class="nutrition-pill">215 cal</span>
+                                <span class="nutrition-pill">5g protein</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="serving-size">
+                        <div class="serving-label">Serving Size</div>
+                        <input type="text" class="serving-input" value="1 serving" placeholder="Enter serving size">
+                    </div>
+                </div>
+                
+                <!-- Manual Entry Tab -->
+                <div class="tab-content" id="manual-tab">
+                    <div class="form-group">
+                        <label class="form-label">Food Name</label>
+                        <input type="text" class="form-input" id="manual-food-name" placeholder="e.g., Homemade Chicken Soup">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description (Optional)</label>
+                        <input type="text" class="form-input" id="manual-food-desc" placeholder="e.g., With vegetables and rice">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Serving Size</label>
+                        <input type="text" class="form-input" id="manual-serving-size" placeholder="e.g., 1 bowl, 2 slices, 200g">
+                    </div>
+                    <div class="nutrition-grid">
+                        <div class="form-group">
+                            <label class="form-label">Calories</label>
+                            <input type="number" class="form-input" id="manual-calories" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Protein (g)</label>
+                            <input type="number" class="form-input" id="manual-protein" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Carbohydrates (g)</label>
+                            <input type="number" class="form-input" id="manual-carbs" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fat (g)</label>
+                            <input type="number" class="form-input" id="manual-fat" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="add-btn">Add Food</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Food database with nutrition information
+        const foodDatabase = {
+            'scrambled-eggs': {
+                name: 'Scrambled Eggs',
+                details: '2 large eggs, cooked',
+                calories: 180,
+                protein: 12,
+                carbs: 2,
+                fat: 14
+            },
+            'avocado-toast': {
+                name: 'Avocado Toast',
+                details: '1 slice whole wheat bread with 1/2 avocado',
+                calories: 250,
+                protein: 7,
+                carbs: 25,
+                fat: 15
+            },
+            'protein-shake': {
+                name: 'Protein Shake',
+                details: '1 scoop whey protein with water',
+                calories: 120,
+                protein: 24,
+                carbs: 3,
+                fat: 1
+            },
+            'grilled-salmon': {
+                name: 'Grilled Salmon',
+                details: '150g fillet, grilled with olive oil',
+                calories: 280,
+                protein: 34,
+                carbs: 0,
+                fat: 16
+            },
+            'brown-rice': {
+                name: 'Brown Rice',
+                details: '1 cup cooked',
+                calories: 215,
+                protein: 5,
+                carbs: 45,
+                fat: 2
+            }
+        };
+
+        // DOM Elements
+        const addFoodButtons = document.querySelectorAll('.add-food-btn');
+        const modalOverlay = document.getElementById('addFoodModal');
+        const closeModalButton = document.querySelector('.close-modal');
+        const cancelButton = document.querySelector('.cancel-btn');
+        const addButton = document.querySelector('.add-btn');
+        const foodOptions = document.querySelectorAll('.food-option');
+        const searchInput = document.querySelector('.search-input');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Manual entry form elements
+        const manualFoodName = document.getElementById('manual-food-name');
+        const manualFoodDesc = document.getElementById('manual-food-desc');
+        const manualServingSize = document.getElementById('manual-serving-size');
+        const manualCalories = document.getElementById('manual-calories');
+        const manualProtein = document.getElementById('manual-protein');
+        const manualCarbs = document.getElementById('manual-carbs');
+        const manualFat = document.getElementById('manual-fat');
+        
+        // Current state
+        let currentMeal = '';
+        let selectedFood = '';
+        let currentTab = 'search';
+
+        // Event Listeners
+        addFoodButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                currentMeal = this.getAttribute('data-meal');
+                openModal();
+            });
+        });
+
+        closeModalButton.addEventListener('click', closeModal);
+        cancelButton.addEventListener('click', closeModal);
+
+        // Tab switching
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        foodOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                foodOptions.forEach(opt => opt.classList.remove('selected'));
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                selectedFood = this.getAttribute('data-food');
+            });
+        });
+
+        addButton.addEventListener('click', function() {
+            if (currentTab === 'search') {
+                if (selectedFood) {
+                    addFoodToMeal(selectedFood, currentMeal);
+                    closeModal();
+                } else {
+                    alert('Please select a food first');
+                }
+            } else if (currentTab === 'manual') {
+                if (validateManualEntry()) {
+                    addManualFoodToMeal(currentMeal);
+                    closeModal();
+                }
+            }
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            foodOptions.forEach(option => {
+                const foodName = option.querySelector('.food-option-name').textContent.toLowerCase();
+                if (foodName.includes(searchTerm)) {
+                    option.style.display = 'flex';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        });
+
+        // Functions
+        function openModal() {
+            modalOverlay.classList.add('active');
+            // Reset selection
+            foodOptions.forEach(opt => opt.classList.remove('selected'));
+            selectedFood = '';
+            searchInput.value = '';
+            // Show all options
+            foodOptions.forEach(opt => opt.style.display = 'flex');
+            // Reset manual form
+            resetManualForm();
+            // Set default tab
+            switchTab('search');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        function switchTab(tabId) {
+            // Update tab buttons
+            tabButtons.forEach(button => {
+                if (button.getAttribute('data-tab') === tabId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            
+            // Update tab contents
+            tabContents.forEach(content => {
+                if (content.id === `${tabId}-tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            currentTab = tabId;
+        }
+
+        function resetManualForm() {
+            manualFoodName.value = '';
+            manualFoodDesc.value = '';
+            manualServingSize.value = '';
+            manualCalories.value = '';
+            manualProtein.value = '';
+            manualCarbs.value = '';
+            manualFat.value = '';
+        }
+
+        function validateManualEntry() {
+            if (!manualFoodName.value.trim()) {
+                alert('Please enter a food name');
+                return false;
+            }
+            if (!manualCalories.value || manualCalories.value < 0) {
+                alert('Please enter a valid calorie amount');
+                return false;
+            }
+            return true;
+        }
+
+        function addFoodToMeal(foodId, meal) {
+            const foodData = foodDatabase[foodId];
+            if (!foodData) return;
+            
+            const mealContainer = document.getElementById(`${meal}-items`);
+            
+            // Remove empty state if it exists
+            const emptyState = mealContainer.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            // Create new food item
+            createFoodItem(mealContainer, foodData.name, foodData.details, foodData.calories, foodData.protein, foodData.carbs, foodData.fat);
+            
+            updateMealCalories(meal);
+            updateNutritionSummary();
+        }
+
+        function addManualFoodToMeal(meal) {
+            const mealContainer = document.getElementById(`${meal}-items`);
+            
+            // Remove empty state if it exists
+            const emptyState = mealContainer.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            const foodName = manualFoodName.value;
+            const foodDesc = manualFoodDesc.value || manualServingSize.value;
+            const calories = parseInt(manualCalories.value);
+            const protein = parseInt(manualProtein.value) || 0;
+            const carbs = parseInt(manualCarbs.value) || 0;
+            const fat = parseInt(manualFat.value) || 0;
+            
+            // Create new food item
+            createFoodItem(mealContainer, foodName, foodDesc, calories, protein, carbs, fat);
+            
+            updateMealCalories(meal);
+            updateNutritionSummary();
+        }
+
+        function createFoodItem(container, name, details, calories, protein, carbs, fat) {
+            const foodItem = document.createElement('div');
+            foodItem.className = 'food-item';
+            foodItem.innerHTML = `
+                <div class="food-info">
+                    <div class="food-name">${name}</div>
+                    <div class="food-details">${details}</div>
+                </div>
+                <div class="food-nutrition">
+                    <div class="nutrition-value">
+                        <div class="nutrition-amount">${calories} cal</div>
+                        <div class="nutrition-label">Calories</div>
+                    </div>
+                    <div class="nutrition-value">
+                        <div class="nutrition-amount">${protein}g</div>
+                        <div class="nutrition-label">Protein</div>
+                    </div>
+                    <div class="nutrition-value">
+                        <div class="nutrition-amount">${carbs}g</div>
+                        <div class="nutrition-label">Carbs</div>
+                    </div>
+                    <div class="nutrition-value">
+                        <div class="nutrition-amount">${fat}g</div>
+                        <div class="nutrition-label">Fat</div>
+                    </div>
+                </div>
+                <div class="food-actions">
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            
+            // Add delete functionality
+            const deleteBtn = foodItem.querySelector('.fa-trash').parentElement;
+            deleteBtn.addEventListener('click', function() {
+                const meal = container.id.replace('-items', '');
+                foodItem.remove();
+                updateMealCalories(meal);
+                updateNutritionSummary();
+                
+                // Show empty state if no foods left
+                if (container.children.length === 0) {
+                    showEmptyState(container, meal);
+                }
+            });
+            
+            container.appendChild(foodItem);
+        }
+
+        function showEmptyState(container, meal) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.innerHTML = `
+                <div class="empty-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="empty-text">No foods added for ${meal} yet</div>
+                <button class="add-food-btn" data-meal="${meal}">
+                    <i class="fas fa-plus"></i> Add Your First Food
+                </button>
+            `;
+            container.appendChild(emptyState);
+            
+            // Re-add event listener to the new button
+            const newButton = emptyState.querySelector('.add-food-btn');
+            newButton.addEventListener('click', function() {
+                currentMeal = this.getAttribute('data-meal');
+                openModal();
+            });
+        }
+
+        function updateMealCalories(meal) {
+            const mealContainer = document.getElementById(`${meal}-items`);
+            const foodItems = mealContainer.querySelectorAll('.food-item');
+            let totalCalories = 0;
+            
+            foodItems.forEach(item => {
+                const caloriesText = item.querySelector('.nutrition-amount').textContent;
+                const calories = parseInt(caloriesText);
+                totalCalories += calories;
+            });
+            
+            const mealCaloriesElement = document.querySelector(`[data-meal="${meal}"]`).closest('.meal-header').querySelector('.meal-calories');
+            mealCaloriesElement.textContent = `${totalCalories} calories`;
+        }
+
+        function updateNutritionSummary() {
+            // This would normally calculate totals from all meals
+            // For this demo, we'll just update based on the initial values
+            const breakfastCalories = 420;
+            const lunchCalories = 580;
+            const snacksCalories = 150;
+            // Dinner starts at 0
+            
+            // Calculate dinner calories
+            const dinnerItems = document.getElementById('dinner-items').querySelectorAll('.food-item');
+            let dinnerCalories = 0;
+            dinnerItems.forEach(item => {
+                const caloriesText = item.querySelector('.nutrition-amount').textContent;
+                const calories = parseInt(caloriesText);
+                dinnerCalories += calories;
+            });
+            
+            const totalCalories = breakfastCalories + lunchCalories + dinnerCalories + snacksCalories;
+            const progressPercentage = Math.min(100, Math.round((totalCalories / 1800) * 100));
+            
+            // Update summary
+            document.querySelector('.macro-amount').textContent = totalCalories;
+            document.querySelector('.progress-label:last-child').textContent = `${totalCalories} / 1,800 (${progressPercentage}%)`;
+            document.querySelector('.progress-fill').style.width = `${progressPercentage}%`;
+        }
+
+        // Simple date navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDateElement = document.querySelector('.current-date');
+            const prevButton = document.querySelector('.fa-chevron-left').parentElement;
+            const nextButton = document.querySelector('.fa-chevron-right').parentElement;
+            
+            let currentDate = new Date();
+            
+            function updateDateDisplay() {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                currentDateElement.textContent = currentDate.toLocaleDateString('en-US', options);
+            }
+            
+            prevButton.addEventListener('click', function() {
+                currentDate.setDate(currentDate.getDate() - 1);
+                updateDateDisplay();
+            });
+            
+            nextButton.addEventListener('click', function() {
+                currentDate.setDate(currentDate.getDate() + 1);
+                updateDateDisplay();
+            });
+            
+            // Initialize with today's date
+            updateDateDisplay();
+        });
+    </script>
+
+</body>
+</html>

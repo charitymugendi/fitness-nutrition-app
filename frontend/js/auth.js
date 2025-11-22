@@ -1,7 +1,7 @@
-// IMPORTANT: Update this base URL to match the port your backend is running on (e.g., 3000, 4000, 5000)
+// auth.js - UPDATED VERSION
 const API_BASE_URL = 'http://localhost:4000'; 
 
-// Function to handle the API fetch, response parsing, and token storage
+// Enhanced function to handle authentication
 const handleAuth = async (url, body, successRedirect, failureMessage) => {
     try {
         const res = await fetch(url, {
@@ -10,30 +10,49 @@ const handleAuth = async (url, body, successRedirect, failureMessage) => {
             body: JSON.stringify(body)
         });
 
-        // 1. Check if the response was successful (HTTP 200-299)
         if (res.ok) {
             const data = await res.json(); 
 
-            // 2. CRITICAL STEP: Store the authentication token if the server provided one
             if (data.token) {
-                // Store the token in Local Storage for future authenticated requests
                 localStorage.setItem('authToken', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user || {}));
             }
             
-            // 3. Redirect on success
-            location.href = successRedirect;
+            // Redirect to dashboard only after successful authentication
+            window.location.href = successRedirect;
 
         } else {
-            // 4. Handle failed status codes (400, 401, 500)
             const error = await res.json();
             alert(`${failureMessage}: ${error.message || res.statusText}`);
         }
     } catch (error) {
-        // 5. Handle network errors (e.g., server down, connection refused)
         console.error("Fetch error:", error);
         alert("A network error occurred. Please ensure your backend server is running on the correct port.");
     }
 };
+
+// Check authentication status on page load
+const checkAuth = () => {
+    const token = localStorage.getItem('authToken');
+    const currentPage = window.location.pathname;
+    
+    // If user is logged in and tries to access login/signup pages, redirect to dashboard
+    if (token && (currentPage.includes('login.html') || currentPage.includes('signup.html'))) {
+        window.location.href = 'dashboard.html';
+        return true;
+    }
+    
+    // If user is not logged in and tries to access protected pages, redirect to login
+    if (!token && currentPage.includes('dashboard.html')) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    return !!token;
+};
+
+// Run auth check when page loads
+document.addEventListener('DOMContentLoaded', checkAuth);
 
 // --- LOGIN LOGIC ---
 const loginForm = document.getElementById("loginForm");
@@ -41,14 +60,13 @@ if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Get values from the form inputs
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        handleAuth(
+        await handleAuth(
             `${API_BASE_URL}/auth/login`,
             { email, password },
-            "dashboard.html", // Redirect to dashboard on successful login
+            "dashboard.html",
             "Login failed"
         );
     });
@@ -60,16 +78,18 @@ if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Get values from the form inputs
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        handleAuth(
+        await handleAuth(
             `${API_BASE_URL}/auth/signup`,
             { name, email, password },
-            "login.html", // Redirect to login page on successful signup
+            "login.html",
             "Signup failed"
         );
     });
 }
+
+// Export for use in other files if needed
+window.auth = { checkAuth };

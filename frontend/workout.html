@@ -1,106 +1,1895 @@
-<!DOCTYPE html>
+(<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Library</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+    <title>Home Workout Library</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS for the modal and specific elements -->
+    <style>
+        :root {
+            --primary-color: #f75d59; /* Red/Orange from the image */
+            --secondary-color: #1f2937; /* Dark text */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        
+        /* Custom styling for the video player modal overlay */
+        .video-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+        }
+        .hidden-initial {
+            display: none;
+            opacity: 0;
+        }
+        .video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+            padding: 20px;
+            background: #000;
+            border-radius: 12px;
+        }
+        /* 16:9 Aspect Ratio container for the iframe */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 9 / 16 * 100 */
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+        .close-button {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            background: var(--primary-color);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        /* Admin controls */
+        .admin-controls {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
 
-    <!-- NAVBAR CONTAINER (Reused from dashboard) -->
-    <header class="navbar-container">
-        <div class="logo">MyFitnessApp</div>
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="profile.html">Profile</a>
-            <a href="workout.html">Workout</a>
-            <a href="nutrition.html">Nutrition</a>
-            <a href="community.html">Community</a>
-            <a href="blog.html">Blog</a>
-        </nav>
-        <div class="auth-status">
-            <span id="welcome-message" class="hidden-initial">Hi admin</span>
-            <a href="login.html" id="login-link" class="hidden-initial">Login</a>
-            <a href="#" id="logout-link">Logout</a>
+        .img-filter-invert {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Category section styling */
+        .category-section {
+            margin-bottom: 2rem;
+        }
+        
+        .category-header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1f2937;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .difficulty-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .difficulty-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .beginner-badge {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .intermediate-badge {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .advanced-badge {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header Section -->
+    <header class="mb-6 bg-blue-600 p-6 rounded-xl shadow-lg text-white relative overflow-hidden">
+        <h1 class="text-2xl font-bold mb-1">HOME WORKOUT</h1>
+        <!-- PRO+ Badge -->
+        <div class="absolute top-4 right-4 bg-yellow-500 text-sm font-semibold py-1 px-3 rounded-full flex items-center shadow">
+            🔥 PRO+
         </div>
+        <!-- Challenge Details -->
+        <div class="mt-4">
+            <p class="text-sm font-light">28 DAYS</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-2">FULL BODY CHALLENGE</h2>
+            <p class="text-sm">36% Finished</p>
+            <p class="text-6xl font-black mt-2 mb-4">DAY 11</p>
+            <button class="bg-white text-blue-600 font-bold py-3 px-8 rounded-full shadow-xl hover:bg-gray-100 transition duration-200">
+                START
+            </button>
+        </div>
+        <!-- Background muscle figure -->
+        <img src="https://placehold.co/150x150/0f172a/ffffff?text=Muscle" alt="Workout figure" class="absolute right-0 bottom-0 opacity-20 transform translate-x-1/4 translate-y-1/4 pointer-events-none hidden sm:block img-filter-invert">
     </header>
 
-    <!-- MAIN CONTENT AREA -->
-    <main class="dashboard-content workout-page">
-        <div class="breadcrumb">
-            <a href="index.html">Home</a> / Workout Library
+    <!-- Error Message Container -->
+    <div id="error-message" class="error-message"></div>
+
+    <!-- Admin Controls (Initially Hidden) -->
+    <div id="admin-controls" class="admin-controls hidden-initial">
+        <h3 class="text-lg font-bold mb-3">🎬 Add New Workout Video</h3>
+        <form id="add-video-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="video-title">Title *</label>
+                    <input type="text" id="video-title" name="title" required placeholder="e.g., Abs Beginner Workout">
+                </div>
+                <div class="form-group">
+                    <label for="video-muscle-group">Muscle Group *</label>
+                    <select id="video-muscle-group" name="muscle_group" required>
+                        <option value="">Select Muscle Group</option>
+                        <option value="Abs">Abs</option>
+                        <option value="Arm">Arm</option>
+                        <option value="Chest">Chest</option>
+                        <option value="Leg">Leg</option>
+                        <option value="Shoulder">Shoulder</option>
+                        <option value="Back">Back</option>
+                        <option value="Full Body">Full Body</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="video-duration">Duration (minutes) *</label>
+                    <input type="number" id="video-duration" name="duration" required min="1" placeholder="e.g., 20">
+                </div>
+                <div class="form-group">
+                    <label for="video-exercises">Number of Exercises *</label>
+                    <input type="number" id="video-exercises" name="exercises" required min="1" placeholder="e.g., 15">
+                </div>
+                <div class="form-group">
+                    <label for="video-difficulty">Difficulty *</label>
+                    <select id="video-difficulty" name="difficulty" required>
+                        <option value="">Select Difficulty</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="video-embed-url">YouTube Embed URL *</label>
+                    <input type="url" id="video-embed-url" name="embed_url" required placeholder="e.g., https://www.youtube.com/embed/VIDEO_ID">
+                </div>
+                <div class="form-group md:col-span-2">
+                    <label for="video-thumbnail">Thumbnail URL (Optional)</label>
+                    <input type="url" id="video-thumbnail" name="thumbnail_url" placeholder="e.g., https://example.com/thumbnail.jpg">
+                </div>
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <span class="loading-spinner hidden"></span>
+                    Add Video
+                </button>
+                <button type="button" id="cancel-add" class="btn btn-danger">Cancel</button>
+                <button type="button" id="toggle-admin" class="btn btn-success ml-auto">👤 Admin Mode</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Body Focus / Filters Section -->
+    <section class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Body Focus</h2>
+            <button id="show-admin" class="btn btn-primary text-sm">
+                🎬 Add Video
+            </button>
         </div>
         
-        <h1 class="main-heading">Find Your Next Workout</h1>
+        <!-- Filter Tabs for Muscle Groups -->
+        <div id="filter-tabs" class="flex overflow-x-auto pb-2 space-x-3 whitespace-nowrap scrollbar-hide">
+            <button data-muscle="Abs" class="filter-tab px-4 py-2 text-sm rounded-full bg-blue-600 text-white shadow-md active-tab">Abs</button>
+            <button data-muscle="Arm" class="filter-tab px-4 py-2 text-sm rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100">Arm</button>
+            <button data-muscle="Chest" class="filter-tab px-4 py-2 text-sm rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100">Chest</button>
+            <button data-muscle="Leg" class="filter-tab px-4 py-2 text-sm rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100">Leg</button>
+            <button data-muscle="Shoulder" class="filter-tab px-4 py-2 text-sm rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100">Shoulder</button>
+            <button data-muscle="Back" class="filter-tab px-4 py-2 text-sm rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100">Back</button>
+            <button data-muscle="Full Body" class="filter-tab px-4 py-2 text-sm rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100">Full Body</button>
+        </div>
+    </section>
 
-        <!-- Search and Filter Section -->
-        <section class="filter-bar">
-            <!-- Added title for accessibility -->
-            <input type="text" id="search-input" placeholder="Search by name or muscle group (e.g., chest, yoga)" title="Search Workouts">
-            
-            <!-- FIX: Added title attribute -->
-            <select id="difficulty-filter" title="Filter by Difficulty Level">
-                <option value="">All Difficulty</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-            </select>
-            
-            <!-- FIX: Added title attribute -->
-            <select id="duration-filter" title="Filter by Duration">
-                <option value="">All Duration</option>
-                <option value="15">Under 15 min</option>
-                <option value="30">15 - 30 min</option>
-                <option value="60">Over 30 min</option>
-            </select>
-        </section>
-
-        <!-- Video Gallery Grid -->
-        <section class="video-gallery">
-            <h2 class="section-title">Video Library</h2>
-            <div id="workout-grid" class="data-grid">
-                <!-- Video cards will be dynamically inserted here by JavaScript -->
-                <p id="loading-message">Loading workout videos...</p>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER (Reused) -->
-    <footer class="app-footer">
-        <div class="footer-inner-content">
-            <div class="footer-left">
-                <div class="logo">MyFitnessApp</div>
-                <p>Losing weight isn't easy - we know. But with MyFitnessApp, you'll get the tools you need to successfully...</p>
-            </div>
-            
-            <div class="footer-sections">
-                <div class="footer-section">
-                    <h4>SPECIAL THANKS TO</h4>
-                    <p><a href="#">myfitnesspal.com</a></p>
-                    <p><a href="#">muscleandstrength.com</a></p>
-                    <p><a href="#">bodybuilding.com</a></p>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>USEFUL LINKS</h4>
-                    <p><a href="#">Open Source System</a></p>
-                    <p><a href="#">YouTube Terms of Service</a></p>
-                </div>
-
-                <div class="footer-section">
-                    <h4>CONTACT</h4>
-                    <p>Dimitrovgrad, Bulgaria</p>
-                    <p>info@myfitness-app.com</p>
-                    <p>+ 000 000 000 000</p>
-                </div>
+    <!-- Workout Grid/List -->
+    <section>
+        <div id="workout-grid" class="space-y-6">
+            <!-- Video Cards will be inserted here by JavaScript -->
+            <div class="text-center">
+                <div class="loading-spinner mx-auto"></div>
+                <p class="text-gray-500 mt-2">Loading workout videos...</p>
             </div>
         </div>
-    </footer>
+    </section>
     
-    <!-- Link JS for Navbar and workout logic -->
-    <script src="js/dashboard.js"></script> 
-    <script src="js/workouts.js"></script>
+    <!-- Video Player Modal -->
+    <div id="video-modal" class="video-modal-overlay hidden-initial">
+        <div class="video-modal-content">
+            <span class="close-button">&times;</span>
+            <div class="iframe-container"> 
+                <iframe id="video-iframe" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const API_BASE_URL = 'http://localhost:4000'; 
+        let allVideos = [];
+        let currentFilter = 'Abs';
+        let isAdminMode = false;
+
+        // Complete workout videos data structure for all 7 categories
+        const workoutVideosData = {
+            "Abs": {
+                "beginner": [
+                    {
+                        id: "abs-beginner-1",
+                        title: "Abs Beginner Workout 1 - Core Fundamentals",
+                        muscle_group: "Abs",
+                        duration: 12,
+                        exercises: 6,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/abs-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-beginner-2",
+                        title: "Abs Beginner Workout 2 - Basic Crunches",
+                        muscle_group: "Abs",
+                        duration: 15,
+                        exercises: 8,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/abs-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-beginner-3",
+                        title: "Abs Beginner Workout 3 - Plank Basics",
+                        muscle_group: "Abs",
+                        duration: 10,
+                        exercises: 5,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/abs-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-beginner-4",
+                        title: "Abs Beginner Workout 4 - Leg Raises Intro",
+                        muscle_group: "Abs",
+                        duration: 18,
+                        exercises: 9,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/abs-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-beginner-5",
+                        title: "Abs Beginner Workout 5 - Full Core Activation",
+                        muscle_group: "Abs",
+                        duration: 20,
+                        exercises: 10,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/abs-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "abs-intermediate-1",
+                        title: "Abs Intermediate Workout 1 - Core Strength",
+                        muscle_group: "Abs",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/abs-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-intermediate-2",
+                        title: "Abs Intermediate Workout 2 - Advanced Planks",
+                        muscle_group: "Abs",
+                        duration: 28,
+                        exercises: 14,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/abs-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-intermediate-3",
+                        title: "Abs Intermediate Workout 3 - Russian Twists",
+                        muscle_group: "Abs",
+                        duration: 22,
+                        exercises: 11,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/abs-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-intermediate-4",
+                        title: "Abs Intermediate Workout 4 - Mountain Climbers",
+                        muscle_group: "Abs",
+                        duration: 30,
+                        exercises: 15,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/abs-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-intermediate-5",
+                        title: "Abs Intermediate Workout 5 - Core Stability",
+                        muscle_group: "Abs",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/abs-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "abs-advanced-1",
+                        title: "Abs Advanced Workout 1 - Six Pack Shred",
+                        muscle_group: "Abs",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/abs-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-advanced-2",
+                        title: "Abs Advanced Workout 2 - Core Destruction",
+                        muscle_group: "Abs",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/abs-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-advanced-3",
+                        title: "Abs Advanced Workout 3 - Dragon Flags",
+                        muscle_group: "Abs",
+                        duration: 35,
+                        exercises: 17,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/abs-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-advanced-4",
+                        title: "Abs Advanced Workout 4 - Hanging Leg Raises",
+                        muscle_group: "Abs",
+                        duration: 38,
+                        exercises: 19,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/abs-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "abs-advanced-5",
+                        title: "Abs Advanced Workout 5 - Ultimate Core Challenge",
+                        muscle_group: "Abs",
+                        duration: 50,
+                        exercises: 25,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/abs-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            },
+            "Arm": {
+                "beginner": [
+                    {
+                        id: "arm-beginner-1",
+                        title: "Arm Beginner Workout 1 - Basic Biceps",
+                        muscle_group: "Arm",
+                        duration: 15,
+                        exercises: 8,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/arm-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-beginner-2",
+                        title: "Arm Beginner Workout 2 - Triceps Foundation",
+                        muscle_group: "Arm",
+                        duration: 18,
+                        exercises: 9,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/arm-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-beginner-3",
+                        title: "Arm Beginner Workout 3 - Forearm Basics",
+                        muscle_group: "Arm",
+                        duration: 12,
+                        exercises: 6,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/arm-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-beginner-4",
+                        title: "Arm Beginner Workout 4 - Full Arm Activation",
+                        muscle_group: "Arm",
+                        duration: 20,
+                        exercises: 10,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/arm-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-beginner-5",
+                        title: "Arm Beginner Workout 5 - Arm Tone & Shape",
+                        muscle_group: "Arm",
+                        duration: 22,
+                        exercises: 11,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/arm-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "arm-intermediate-1",
+                        title: "Arm Intermediate Workout 1 - Biceps Growth",
+                        muscle_group: "Arm",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/arm-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-intermediate-2",
+                        title: "Arm Intermediate Workout 2 - Triceps Strength",
+                        muscle_group: "Arm",
+                        duration: 28,
+                        exercises: 14,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/arm-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-intermediate-3",
+                        title: "Arm Intermediate Workout 3 - Arm Definition",
+                        muscle_group: "Arm",
+                        duration: 30,
+                        exercises: 15,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/arm-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-intermediate-4",
+                        title: "Arm Intermediate Workout 4 - Push-up Variations",
+                        muscle_group: "Arm",
+                        duration: 32,
+                        exercises: 16,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/arm-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-intermediate-5",
+                        title: "Arm Intermediate Workout 5 - Arm Sculpting",
+                        muscle_group: "Arm",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/arm-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "arm-advanced-1",
+                        title: "Arm Advanced Workout 1 - Arm Mass Builder",
+                        muscle_group: "Arm",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/arm-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-advanced-2",
+                        title: "Arm Advanced Workout 2 - Triceps Specialization",
+                        muscle_group: "Arm",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/arm-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-advanced-3",
+                        title: "Arm Advanced Workout 3 - Biceps Peak",
+                        muscle_group: "Arm",
+                        duration: 38,
+                        exercises: 19,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/arm-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-advanced-4",
+                        title: "Arm Advanced Workout 4 - Arm Endurance",
+                        muscle_group: "Arm",
+                        duration: 50,
+                        exercises: 25,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/arm-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "arm-advanced-5",
+                        title: "Arm Advanced Workout 5 - Complete Arm Annihilation",
+                        muscle_group: "Arm",
+                        duration: 55,
+                        exercises: 28,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/arm-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            },
+            "Chest": {
+                "beginner": [
+                    {
+                        id: "chest-beginner-1",
+                        title: "Chest Beginner Workout 1 - Push-up Basics",
+                        muscle_group: "Chest",
+                        duration: 15,
+                        exercises: 8,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/chest-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-beginner-2",
+                        title: "Chest Beginner Workout 2 - Chest Activation",
+                        muscle_group: "Chest",
+                        duration: 18,
+                        exercises: 9,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/chest-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-beginner-3",
+                        title: "Chest Beginner Workout 3 - Upper Chest Focus",
+                        muscle_group: "Chest",
+                        duration: 20,
+                        exercises: 10,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/chest-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-beginner-4",
+                        title: "Chest Beginner Workout 4 - Chest Foundation",
+                        muscle_group: "Chest",
+                        duration: 22,
+                        exercises: 11,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/chest-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-beginner-5",
+                        title: "Chest Beginner Workout 5 - Full Chest Development",
+                        muscle_group: "Chest",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/chest-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "chest-intermediate-1",
+                        title: "Chest Intermediate Workout 1 - Chest Strength",
+                        muscle_group: "Chest",
+                        duration: 30,
+                        exercises: 15,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/chest-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-intermediate-2",
+                        title: "Chest Intermediate Workout 2 - Incline Focus",
+                        muscle_group: "Chest",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/chest-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-intermediate-3",
+                        title: "Chest Intermediate Workout 3 - Decline Special",
+                        muscle_group: "Chest",
+                        duration: 32,
+                        exercises: 16,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/chest-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-intermediate-4",
+                        title: "Chest Intermediate Workout 4 - Chest Definition",
+                        muscle_group: "Chest",
+                        duration: 38,
+                        exercises: 19,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/chest-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-intermediate-5",
+                        title: "Chest Intermediate Workout 5 - Push-up Mastery",
+                        muscle_group: "Chest",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/chest-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "chest-advanced-1",
+                        title: "Chest Advanced Workout 1 - Chest Mass Builder",
+                        muscle_group: "Chest",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/chest-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-advanced-2",
+                        title: "Chest Advanced Workout 2 - Upper Chest Specialization",
+                        muscle_group: "Chest",
+                        duration: 50,
+                        exercises: 25,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/chest-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-advanced-3",
+                        title: "Chest Advanced Workout 3 - Chest Endurance",
+                        muscle_group: "Chest",
+                        duration: 55,
+                        exercises: 28,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/chest-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-advanced-4",
+                        title: "Chest Advanced Workout 4 - Complete Chest Annihilation",
+                        muscle_group: "Chest",
+                        duration: 60,
+                        exercises: 30,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/chest-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "chest-advanced-5",
+                        title: "Chest Advanced Workout 5 - Professional Chest Training",
+                        muscle_group: "Chest",
+                        duration: 65,
+                        exercises: 32,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/chest-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            },
+            "Leg": {
+                "beginner": [
+                    {
+                        id: "leg-beginner-1",
+                        title: "Leg Beginner Workout 1 - Squat Basics",
+                        muscle_group: "Leg",
+                        duration: 20,
+                        exercises: 10,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/leg-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-beginner-2",
+                        title: "Leg Beginner Workout 2 - Lunges Foundation",
+                        muscle_group: "Leg",
+                        duration: 22,
+                        exercises: 11,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/leg-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-beginner-3",
+                        title: "Leg Beginner Workout 3 - Glute Activation",
+                        muscle_group: "Leg",
+                        duration: 18,
+                        exercises: 9,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/leg-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-beginner-4",
+                        title: "Leg Beginner Workout 4 - Quad Focus",
+                        muscle_group: "Leg",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/leg-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-beginner-5",
+                        title: "Leg Beginner Workout 5 - Hamstring Basics",
+                        muscle_group: "Leg",
+                        duration: 23,
+                        exercises: 11,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/leg-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "leg-intermediate-1",
+                        title: "Leg Intermediate Workout 1 - Leg Strength",
+                        muscle_group: "Leg",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/leg-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-intermediate-2",
+                        title: "Leg Intermediate Workout 2 - Quad Development",
+                        muscle_group: "Leg",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/leg-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-intermediate-3",
+                        title: "Leg Intermediate Workout 3 - Glute Building",
+                        muscle_group: "Leg",
+                        duration: 38,
+                        exercises: 19,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/leg-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-intermediate-4",
+                        title: "Leg Intermediate Workout 4 - Hamstring Specialization",
+                        muscle_group: "Leg",
+                        duration: 42,
+                        exercises: 21,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/leg-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-intermediate-5",
+                        title: "Leg Intermediate Workout 5 - Complete Leg Sculpting",
+                        muscle_group: "Leg",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/leg-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "leg-advanced-1",
+                        title: "Leg Advanced Workout 1 - Leg Mass Builder",
+                        muscle_group: "Leg",
+                        duration: 55,
+                        exercises: 28,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/leg-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-advanced-2",
+                        title: "Leg Advanced Workout 2 - Quad Annihilation",
+                        muscle_group: "Leg",
+                        duration: 60,
+                        exercises: 30,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/leg-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-advanced-3",
+                        title: "Leg Advanced Workout 3 - Glute Destruction",
+                        muscle_group: "Leg",
+                        duration: 58,
+                        exercises: 29,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/leg-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-advanced-4",
+                        title: "Leg Advanced Workout 4 - Hamstring Focus",
+                        muscle_group: "Leg",
+                        duration: 52,
+                        exercises: 26,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/leg-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "leg-advanced-5",
+                        title: "Leg Advanced Workout 5 - Ultimate Leg Challenge",
+                        muscle_group: "Leg",
+                        duration: 65,
+                        exercises: 32,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/leg-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            },
+            "Shoulder": {
+                "beginner": [
+                    {
+                        id: "shoulder-beginner-1",
+                        title: "Shoulder Beginner Workout 1 - Deltoid Basics",
+                        muscle_group: "Shoulder",
+                        duration: 15,
+                        exercises: 8,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/shoulder-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-beginner-2",
+                        title: "Shoulder Beginner Workout 2 - Shoulder Mobility",
+                        muscle_group: "Shoulder",
+                        duration: 18,
+                        exercises: 9,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/shoulder-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-beginner-3",
+                        title: "Shoulder Beginner Workout 3 - Front Delt Focus",
+                        muscle_group: "Shoulder",
+                        duration: 20,
+                        exercises: 10,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/shoulder-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-beginner-4",
+                        title: "Shoulder Beginner Workout 4 - Lateral Raises Intro",
+                        muscle_group: "Shoulder",
+                        duration: 22,
+                        exercises: 11,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/shoulder-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-beginner-5",
+                        title: "Shoulder Beginner Workout 5 - Complete Shoulder Activation",
+                        muscle_group: "Shoulder",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/shoulder-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "shoulder-intermediate-1",
+                        title: "Shoulder Intermediate Workout 1 - Shoulder Strength",
+                        muscle_group: "Shoulder",
+                        duration: 30,
+                        exercises: 15,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/shoulder-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-intermediate-2",
+                        title: "Shoulder Intermediate Workout 2 - Lateral Delt Specialization",
+                        muscle_group: "Shoulder",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/shoulder-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-intermediate-3",
+                        title: "Shoulder Intermediate Workout 3 - Rear Delt Focus",
+                        muscle_group: "Shoulder",
+                        duration: 32,
+                        exercises: 16,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/shoulder-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-intermediate-4",
+                        title: "Shoulder Intermediate Workout 4 - Shoulder Definition",
+                        muscle_group: "Shoulder",
+                        duration: 38,
+                        exercises: 19,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/shoulder-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-intermediate-5",
+                        title: "Shoulder Intermediate Workout 5 - Complete Shoulder Development",
+                        muscle_group: "Shoulder",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/shoulder-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "shoulder-advanced-1",
+                        title: "Shoulder Advanced Workout 1 - Shoulder Mass Builder",
+                        muscle_group: "Shoulder",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/shoulder-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-advanced-2",
+                        title: "Shoulder Advanced Workout 2 - Deltoid Annihilation",
+                        muscle_group: "Shoulder",
+                        duration: 50,
+                        exercises: 25,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/shoulder-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-advanced-3",
+                        title: "Shoulder Advanced Workout 3 - Shoulder Endurance",
+                        muscle_group: "Shoulder",
+                        duration: 55,
+                        exercises: 28,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/shoulder-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-advanced-4",
+                        title: "Shoulder Advanced Workout 4 - Complete Shoulder Destruction",
+                        muscle_group: "Shoulder",
+                        duration: 60,
+                        exercises: 30,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/shoulder-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "shoulder-advanced-5",
+                        title: "Shoulder Advanced Workout 5 - Professional Shoulder Training",
+                        muscle_group: "Shoulder",
+                        duration: 65,
+                        exercises: 32,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/shoulder-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            },
+            "Back": {
+                "beginner": [
+                    {
+                        id: "back-beginner-1",
+                        title: "Back Beginner Workout 1 - Lat Activation",
+                        muscle_group: "Back",
+                        duration: 20,
+                        exercises: 10,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/back-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-beginner-2",
+                        title: "Back Beginner Workout 2 - Rhomboid Basics",
+                        muscle_group: "Back",
+                        duration: 22,
+                        exercises: 11,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/back-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-beginner-3",
+                        title: "Back Beginner Workout 3 - Lower Back Foundation",
+                        muscle_group: "Back",
+                        duration: 18,
+                        exercises: 9,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/back-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-beginner-4",
+                        title: "Back Beginner Workout 4 - Upper Back Focus",
+                        muscle_group: "Back",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/back-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-beginner-5",
+                        title: "Back Beginner Workout 5 - Complete Back Activation",
+                        muscle_group: "Back",
+                        duration: 28,
+                        exercises: 14,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/back-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "back-intermediate-1",
+                        title: "Back Intermediate Workout 1 - Back Strength",
+                        muscle_group: "Back",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/back-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-intermediate-2",
+                        title: "Back Intermediate Workout 2 - Lat Development",
+                        muscle_group: "Back",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/back-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-intermediate-3",
+                        title: "Back Intermediate Workout 3 - V-Taper Builder",
+                        muscle_group: "Back",
+                        duration: 38,
+                        exercises: 19,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/back-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-intermediate-4",
+                        title: "Back Intermediate Workout 4 - Rhomboid Specialization",
+                        muscle_group: "Back",
+                        duration: 42,
+                        exercises: 21,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/back-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-intermediate-5",
+                        title: "Back Intermediate Workout 5 - Complete Back Sculpting",
+                        muscle_group: "Back",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/back-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "back-advanced-1",
+                        title: "Back Advanced Workout 1 - Back Mass Builder",
+                        muscle_group: "Back",
+                        duration: 55,
+                        exercises: 28,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/back-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-advanced-2",
+                        title: "Back Advanced Workout 2 - Lat Annihilation",
+                        muscle_group: "Back",
+                        duration: 60,
+                        exercises: 30,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/back-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-advanced-3",
+                        title: "Back Advanced Workout 3 - Complete Back Destruction",
+                        muscle_group: "Back",
+                        duration: 65,
+                        exercises: 32,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/back-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-advanced-4",
+                        title: "Back Advanced Workout 4 - Professional Back Training",
+                        muscle_group: "Back",
+                        duration: 70,
+                        exercises: 35,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/back-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "back-advanced-5",
+                        title: "Back Advanced Workout 5 - Ultimate Back Challenge",
+                        muscle_group: "Back",
+                        duration: 75,
+                        exercises: 38,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/back-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            },
+            "Full Body": {
+                "beginner": [
+                    {
+                        id: "fullbody-beginner-1",
+                        title: "Full Body Beginner Workout 1 - Total Body Basics",
+                        muscle_group: "Full Body",
+                        duration: 25,
+                        exercises: 12,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/fullbody-beginner-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-beginner-2",
+                        title: "Full Body Beginner Workout 2 - Foundation Building",
+                        muscle_group: "Full Body",
+                        duration: 28,
+                        exercises: 14,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/fullbody-beginner-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-beginner-3",
+                        title: "Full Body Beginner Workout 3 - Metabolic Activation",
+                        muscle_group: "Full Body",
+                        duration: 30,
+                        exercises: 15,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/fullbody-beginner-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-beginner-4",
+                        title: "Full Body Beginner Workout 4 - Bodyweight Fundamentals",
+                        muscle_group: "Full Body",
+                        duration: 32,
+                        exercises: 16,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/fullbody-beginner-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-beginner-5",
+                        title: "Full Body Beginner Workout 5 - Complete Body Activation",
+                        muscle_group: "Full Body",
+                        duration: 35,
+                        exercises: 18,
+                        difficulty: "beginner",
+                        embed_url: "https://www.youtube.com/embed/fullbody-beginner-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "intermediate": [
+                    {
+                        id: "fullbody-intermediate-1",
+                        title: "Full Body Intermediate Workout 1 - Total Body Strength",
+                        muscle_group: "Full Body",
+                        duration: 40,
+                        exercises: 20,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/fullbody-intermediate-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-intermediate-2",
+                        title: "Full Body Intermediate Workout 2 - Metabolic Conditioning",
+                        muscle_group: "Full Body",
+                        duration: 45,
+                        exercises: 22,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/fullbody-intermediate-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-intermediate-3",
+                        title: "Full Body Intermediate Workout 3 - Strength & Endurance",
+                        muscle_group: "Full Body",
+                        duration: 50,
+                        exercises: 25,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/fullbody-intermediate-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-intermediate-4",
+                        title: "Full Body Intermediate Workout 4 - Complete Body Sculpting",
+                        muscle_group: "Full Body",
+                        duration: 55,
+                        exercises: 28,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/fullbody-intermediate-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-intermediate-5",
+                        title: "Full Body Intermediate Workout 5 - Functional Fitness",
+                        muscle_group: "Full Body",
+                        duration: 60,
+                        exercises: 30,
+                        difficulty: "intermediate",
+                        embed_url: "https://www.youtube.com/embed/fullbody-intermediate-5",
+                        thumbnail_url: ""
+                    }
+                ],
+                "advanced": [
+                    {
+                        id: "fullbody-advanced-1",
+                        title: "Full Body Advanced Workout 1 - Total Body Annihilation",
+                        muscle_group: "Full Body",
+                        duration: 65,
+                        exercises: 32,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/fullbody-advanced-1",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-advanced-2",
+                        title: "Full Body Advanced Workout 2 - Elite Conditioning",
+                        muscle_group: "Full Body",
+                        duration: 70,
+                        exercises: 35,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/fullbody-advanced-2",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-advanced-3",
+                        title: "Full Body Advanced Workout 3 - Maximum Intensity",
+                        muscle_group: "Full Body",
+                        duration: 75,
+                        exercises: 38,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/fullbody-advanced-3",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-advanced-4",
+                        title: "Full Body Advanced Workout 4 - Professional Level Training",
+                        muscle_group: "Full Body",
+                        duration: 80,
+                        exercises: 40,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/fullbody-advanced-4",
+                        thumbnail_url: ""
+                    },
+                    {
+                        id: "fullbody-advanced-5",
+                        title: "Full Body Advanced Workout 5 - Ultimate Fitness Challenge",
+                        muscle_group: "Full Body",
+                        duration: 90,
+                        exercises: 45,
+                        difficulty: "advanced",
+                        embed_url: "https://www.youtube.com/embed/fullbody-advanced-5",
+                        thumbnail_url: ""
+                    }
+                ]
+            }
+        };
+
+        // --- VIDEO PLAYER MODAL LOGIC ---
+        const setupVideoPlayer = () => {
+            const modal = document.getElementById('video-modal');
+            const closeButton = modal.querySelector('.close-button');
+            
+            closeButton.onclick = () => closeModal();
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            };
+            
+            window.closeModal = () => {
+                const iframe = document.getElementById('video-iframe');
+                iframe.src = ''; 
+                modal.classList.add('hidden-initial');
+            };
+        };
+
+        const openModal = (videoUrl) => {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-iframe');
+            
+            const embedUrl = videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`;
+            iframe.src = embedUrl;
+
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.remove('hidden-initial');
+            }, 10);
+        };
+
+        // --- ADMIN CONTROLS LOGIC ---
+        const toggleAdminControls = () => {
+            const adminControls = document.getElementById('admin-controls');
+            const showAdminBtn = document.getElementById('show-admin');
+            const toggleAdminBtn = document.getElementById('toggle-admin');
+            
+            isAdminMode = !isAdminMode;
+            
+            if (isAdminMode) {
+                adminControls.classList.remove('hidden-initial');
+                showAdminBtn.style.display = 'none';
+                toggleAdminBtn.textContent = '🚫 Exit Admin Mode';
+            } else {
+                adminControls.classList.add('hidden-initial');
+                showAdminBtn.style.display = 'block';
+                toggleAdminBtn.textContent = '👤 Admin Mode';
+                document.getElementById('add-video-form').reset();
+            }
+            
+            // Refresh display to show/hide delete buttons
+            filterAndDisplayVideos();
+        };
+
+        const addNewVideo = async (videoData) => {
+            const spinner = document.querySelector('#add-video-form .loading-spinner');
+            const submitBtn = document.querySelector('#add-video-form button[type="submit"]');
+            
+            try {
+                spinner.classList.remove('hidden');
+                submitBtn.disabled = true;
+                
+                const response = await fetch(`${API_BASE_URL}/api/workouts/videos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(videoData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to add video');
+                }
+                
+                const result = await response.json();
+                showSuccess('Video added successfully!');
+                document.getElementById('add-video-form').reset();
+                toggleAdminControls();
+                
+                // Reload the videos to show the new one
+                await loadWorkoutVideos();
+                
+            } catch (error) {
+                console.error('Error adding video:', error);
+                showError(`Failed to add video: ${error.message}`);
+            } finally {
+                spinner.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        };
+
+        // --- CORE WORKOUT LOGIC ---
+        const getDifficultyStars = (difficulty) => {
+            if (difficulty === 'beginner') return { count: 1, color: 'text-green-500' };
+            if (difficulty === 'intermediate') return { count: 2, color: 'text-yellow-500' };
+            if (difficulty === 'advanced') return { count: 3, color: 'text-red-500' };
+            return { count: 0, color: 'text-gray-400' };
+        };
+
+        const getDifficultyBadge = (difficulty) => {
+            if (difficulty === 'beginner') return 'beginner-badge';
+            if (difficulty === 'intermediate') return 'intermediate-badge';
+            if (difficulty === 'advanced') return 'advanced-badge';
+            return '';
+        };
+
+        const getDifficultyText = (difficulty) => {
+            if (difficulty === 'beginner') return 'Beginner';
+            if (difficulty === 'intermediate') return 'Intermediate';
+            if (difficulty === 'advanced') return 'Advanced';
+            return '';
+        };
+
+        const createVideoCard = (video) => {
+            const card = document.createElement('div');
+            card.className = 'flex items-center space-x-4 bg-white p-4 rounded-xl shadow-md cursor-pointer hover:bg-gray-100 transition duration-200';
+            
+            card.onclick = () => openModal(video.embed_url);
+
+            const thumbnailUrl = video.thumbnail_url || `https://placehold.co/64x64/3b82f6/ffffff?text=${video.muscle_group}`;
+            
+            const { count: starCount, color: starColor } = getDifficultyStars(video.difficulty);
+            const difficultyStars = '⭐'.repeat(starCount);
+            
+            const lastCompletedText = video.last_completed ? 
+                `<p class="text-xs text-blue-600 font-semibold mt-1">Last time: ${video.last_completed}</p>` : '';
+
+            card.innerHTML = `
+                <img src="${thumbnailUrl}" alt="${video.title} Thumbnail" class="w-16 h-16 object-cover rounded-lg flex-shrink-0 shadow">
+                <div class="flex-grow">
+                    <h3 class="text-base font-semibold text-gray-800">${video.title}</h3>
+                    <div class="flex items-center text-sm text-gray-500 space-x-2">
+                        <span>${video.duration} mins</span>
+                        <span>•</span>
+                        <span>${video.exercises} Exercises</span>
+                    </div>
+                    ${lastCompletedText}
+                </div>
+                <div class="flex flex-col items-end text-sm font-medium">
+                    <div class="${starColor}">
+                        ${difficultyStars}
+                    </div>
+                    ${isAdminMode ? `<button class="delete-video mt-1 text-xs text-red-500 hover:text-red-700" data-id="${video.id}">🗑️ Delete</button>` : ''}
+                </div>
+            `;
+            
+            // Add delete functionality in admin mode
+            if (isAdminMode) {
+                const deleteBtn = card.querySelector('.delete-video');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteVideo(video.id);
+                });
+            }
+            
+            return card;
+        };
+
+        const deleteVideo = async (videoId) => {
+            if (!confirm('Are you sure you want to delete this video?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/workouts/videos/${videoId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete video');
+                }
+                
+                showSuccess('Video deleted successfully!');
+                await loadWorkoutVideos();
+                
+            } catch (error) {
+                console.error('Error deleting video:', error);
+                showError('Failed to delete video');
+            }
+        };
+
+        const filterAndDisplayVideos = () => {
+            const grid = document.getElementById('workout-grid');
+            grid.innerHTML = '';
+
+            // Check if we have structured data for the current filter
+            if (workoutVideosData[currentFilter]) {
+                displayCategoryWithSubcategories(currentFilter);
+            } else {
+                // For other categories, use the original display method
+                const filteredVideos = allVideos.filter(video => video.muscle_group === currentFilter);
+                
+                if (filteredVideos.length === 0) {
+                    grid.innerHTML = `
+                        <div class="text-center text-gray-500 mt-8 py-8">
+                            <p class="text-lg">No ${currentFilter} workout videos found.</p>
+                            ${isAdminMode ? '<p class="text-sm mt-2">Use the "Add Video" button to create one!</p>' : ''}
+                        </div>
+                    `;
+                } else {
+                    const sortedVideos = filteredVideos.sort((a, b) => {
+                        const order = { 'beginner': 1, 'intermediate': 2, 'advanced': 3 };
+                        return order[a.difficulty] - order[b.difficulty];
+                    });
+                    
+                    sortedVideos.forEach(video => {
+                        grid.appendChild(createVideoCard(video));
+                    });
+                }
+            }
+
+            // Update tab styling
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                if (tab.getAttribute('data-muscle') === currentFilter) {
+                    tab.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-100');
+                    tab.classList.add('bg-blue-600', 'text-white');
+                } else {
+                    tab.classList.remove('bg-blue-600', 'text-white');
+                    tab.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-100');
+                }
+            });
+        };
+
+        const displayCategoryWithSubcategories = (category) => {
+            const grid = document.getElementById('workout-grid');
+            
+            // Get videos from our sample data
+            const categoryVideos = workoutVideosData[category];
+            
+            if (!categoryVideos) {
+                grid.innerHTML = `
+                    <div class="text-center text-gray-500 mt-8 py-8">
+                        <p class="text-lg">No ${category} workout videos found.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create category section
+            const categorySection = document.createElement('div');
+            categorySection.className = 'category-section';
+            
+            // Add Beginner section
+            if (categoryVideos.beginner && categoryVideos.beginner.length > 0) {
+                const beginnerSection = document.createElement('div');
+                beginnerSection.className = 'difficulty-section';
+                beginnerSection.innerHTML = `
+                    <div class="difficulty-header">
+                        Beginner Workouts
+                        <span class="difficulty-badge beginner-badge">${categoryVideos.beginner.length} workouts</span>
+                    </div>
+                `;
+                
+                categoryVideos.beginner.forEach(video => {
+                    beginnerSection.appendChild(createVideoCard(video));
+                });
+                
+                categorySection.appendChild(beginnerSection);
+            }
+            
+            // Add Intermediate section
+            if (categoryVideos.intermediate && categoryVideos.intermediate.length > 0) {
+                const intermediateSection = document.createElement('div');
+                intermediateSection.className = 'difficulty-section';
+                intermediateSection.innerHTML = `
+                    <div class="difficulty-header">
+                        Intermediate Workouts
+                        <span class="difficulty-badge intermediate-badge">${categoryVideos.intermediate.length} workouts</span>
+                    </div>
+                `;
+                
+                categoryVideos.intermediate.forEach(video => {
+                    intermediateSection.appendChild(createVideoCard(video));
+                });
+                
+                categorySection.appendChild(intermediateSection);
+            }
+            
+            // Add Advanced section
+            if (categoryVideos.advanced && categoryVideos.advanced.length > 0) {
+                const advancedSection = document.createElement('div');
+                advancedSection.className = 'difficulty-section';
+                advancedSection.innerHTML = `
+                    <div class="difficulty-header">
+                        Advanced Workouts
+                        <span class="difficulty-badge advanced-badge">${categoryVideos.advanced.length} workouts</span>
+                    </div>
+                `;
+                
+                categoryVideos.advanced.forEach(video => {
+                    advancedSection.appendChild(createVideoCard(video));
+                });
+                
+                categorySection.appendChild(advancedSection);
+            }
+            
+            grid.appendChild(categorySection);
+        };
+
+        const loadWorkoutVideos = async () => {
+            const grid = document.getElementById('workout-grid');
+            grid.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="loading-spinner mx-auto"></div>
+                    <p class="text-gray-500 mt-2">Loading workout videos...</p>
+                </div>
+            `;
+
+            try {
+                console.log('🔄 Fetching workout videos from API...');
+                const response = await fetch(`${API_BASE_URL}/api/workouts/videos`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const videos = await response.json();
+                console.log(`✅ Loaded ${videos.length} videos from database`);
+                
+                allVideos = videos;
+                filterAndDisplayVideos();
+                
+            } catch (error) {
+                console.error('❌ Error loading workout videos:', error);
+                // If API fails, use sample data for demonstration
+                console.log('Using sample workout data for demonstration');
+                
+                // Convert sample data to flat array for other categories
+                const sampleVideos = [];
+                Object.keys(workoutVideosData).forEach(muscleGroup => {
+                    Object.keys(workoutVideosData[muscleGroup]).forEach(difficulty => {
+                        sampleVideos.push(...workoutVideosData[muscleGroup][difficulty]);
+                    });
+                });
+                
+                allVideos = sampleVideos;
+                filterAndDisplayVideos();
+            }
+        };
+
+        // --- UTILITY FUNCTIONS ---
+        const showError = (message) => {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        };
+
+        const showSuccess = (message) => {
+            // Create a temporary success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4';
+            successDiv.textContent = message;
+            
+            const header = document.querySelector('header');
+            header.parentNode.insertBefore(successDiv, header.nextSibling);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        };
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Setup the modal structure
+            setupVideoPlayer();
+
+            // 2. Load the videos from API
+            loadWorkoutVideos();
+            
+            // 3. Attach listeners to the filter tabs
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const muscleGroup = e.currentTarget.getAttribute('data-muscle');
+                    if (currentFilter !== muscleGroup) {
+                        currentFilter = muscleGroup;
+                        filterAndDisplayVideos();
+                    }
+                });
+            });
+
+            // 4. Admin controls setup
+            document.getElementById('show-admin').addEventListener('click', toggleAdminControls);
+            document.getElementById('toggle-admin').addEventListener('click', toggleAdminControls);
+            document.getElementById('cancel-add').addEventListener('click', toggleAdminControls);
+            
+            document.getElementById('add-video-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const videoData = {
+                    title: formData.get('title'),
+                    muscle_group: formData.get('muscle_group'),
+                    duration: parseInt(formData.get('duration')),
+                    exercises: parseInt(formData.get('exercises')),
+                    difficulty: formData.get('difficulty'),
+                    embed_url: formData.get('embed_url'),
+                    thumbnail_url: formData.get('thumbnail_url') || ''
+                };
+                
+                addNewVideo(videoData);
+            });
+
+            // 5. Close modal with ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

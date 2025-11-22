@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tools & Calculators - MyFitnessApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* --- NAVIGATION --- */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #3498db;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #3498db;
+            border-radius: 2px;
+        }
+        
+        .auth-status {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-status a {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-status a:first-child {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .auth-status a:last-child {
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+        
+        .auth-status a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* --- TOOLS PAGE SPECIFIC CSS --- */
+
+        .tools-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 120px 20px;
+            position: relative;
+        }
+
+        .tools-hero h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 15px; 
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .tools-hero p { 
+            font-size: 1.3rem; 
+            max-width: 700px; 
+            margin: 0 auto 30px; 
+            opacity: 0.9; 
+            line-height: 1.8;
+        }
+
+        .tools-intro {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .tools-intro h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .tools-intro p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tools-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            padding: 35px;
+            border-top: 5px solid #ff4d4d;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .calculator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff4d4d, #3498db);
+        }
+
+        .calculator-card h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .calculator-card p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .calc-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff4d4d, #e74c3c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .calc-btn:hover {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .calc-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* The Result Box (Hidden by default) */
+        .result-box {
+            margin-top: 25px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            border-left: 5px solid #333;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-box h3 {
+            margin: 0 0 15px;
+            color: #2c3e50;
+            font-size: 1.4rem;
+        }
+
+        .big-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff4d4d;
+            display: block;
+            margin: 15px 0;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .result-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .result-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .result-detail {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .result-detail h4 {
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        .result-detail p {
+            color: #ff4d4d;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Additional Tools Section */
+        .more-tools {
+            max-width: 1300px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .more-tools h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .tool-item {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .tool-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .tool-item i {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .tool-item h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .tool-item p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .faq-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+
+        .faq-question h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-answer p {
+            padding-bottom: 20px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 25px 20px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-question i {
+            transition: transform 0.3s;
+            color: #3498db;
+        }
+
+        /* Footer */
+        .app-footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px 20px 20px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: #3498db;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            text-align: center;
+            color: #bdc3c7;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .tools-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tools-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .tools-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="workout.html">Workouts</a>
+            <a href="diet.html">Diet Plans</a>
+            <a href="tools.html" class="active">Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="auth-status">
+            <a href="signup.html">Register</a>
+            <a href="login.html">Login</a>
+        </div>
+    </header>
+
+    <section class="tools-hero">
+        <h1>Fitness Calculators & Tools</h1>
+        <p>Use data-driven insights to optimize your fitness journey. Calculate your metrics and plan your nutrition with precision.</p>
+    </section>
+
+    <section class="tools-intro">
+        <h2>Measure Your Progress</h2>
+        <p>Our calculators use scientifically validated formulas to provide accurate estimates of your body metrics and nutritional needs. Track your progress and make informed decisions about your fitness journey.</p>
+    </section>
+
+    <div class="tools-container">
+
+        <div class="calculator-card">
+            <h2><i class="fas fa-weight-scale"></i> BMI Calculator</h2>
+            <p>Body Mass Index (BMI) is a simple calculation using a person's height and weight. It provides a general indicator of whether you're at a healthy weight for your height.</p>
+            
+            <div class="input-group">
+                <label>Height (cm)</label>
+                <input type="number" id="bmi-height" placeholder="e.g., 175">
+            </div>
+            
+            <div class="input-group">
+                <label>Weight (kg)</label>
+                <input type="number" id="bmi-weight" placeholder="e.g., 70">
+            </div>
+
+            <button class="calc-btn" onclick="calculateBMI()">
+                <i class="fas fa-calculator"></i> Calculate BMI
+            </button>
+
+            <div id="bmi-result" class="result-box">
+                <h3>Your BMI Is:</h3>
+                <span class="big-number" id="bmi-value">0.0</span>
+                <p class="result-desc" id="bmi-status">Normal Weight</p>
+                
+                <div class="result-details">
+                    <div class="result-detail">
+                        <h4>Underweight</h4>
+                        <p>&lt; 18.5</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Normal</h4>
+                        <p>18.5 - 24.9</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Overweight</h4>
+                        <p>25 - 29.9</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Obese</h4>
+                        <p>&gt; 30</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-card">
+            <h2><i class="fas fa-fire"></i> Daily Calorie Needs</h2>
+            <p>Calculate how many calories you burn in a day (TDEE) to know how much to eat for weight maintenance, loss, or gain.</p>
+            
+            <div class="input-group">
+                <label>Gender</label>
+                <select id="cal-gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Age</label>
+                <input type="number" id="cal-age" placeholder="e.g., 25">
+            </div>
+
+            <div class="input-group">
+                <label>Weight (kg)</label>
+                <input type="number" id="cal-weight" placeholder="e.g., 70">
+            </div>
+
+            <div class="input-group">
+                <label>Height (cm)</label>
+                <input type="number" id="cal-height" placeholder="e.g., 175">
+            </div>
+
+            <div class="input-group">
+                <label>Activity Level</label>
+                <select id="cal-activity">
+                    <option value="1.2">Sedentary (Office job, little exercise)</option>
+                    <option value="1.375">Light Exercise (1-2 days/week)</option>
+                    <option value="1.55">Moderate Exercise (3-5 days/week)</option>
+                    <option value="1.725">Heavy Exercise (6-7 days/week)</option>
+                    <option value="1.9">Athlete (2x per day, intense training)</option>
+                </select>
+            </div>
+
+            <button class="calc-btn" onclick="calculateCalories()">
+                <i class="fas fa-bolt"></i> Calculate Calories
+            </button>
+
+            <div id="cal-result" class="result-box">
+                <h3>Your Daily Calorie Needs:</h3>
+                <span class="big-number" id="cal-value">0</span>
+                <p class="result-desc">Eat this amount to maintain your current weight.</p>
+                
+                <div class="result-details">
+                    <div class="result-detail">
+                        <h4>Weight Loss</h4>
+                        <p id="loss-calories">0 kcal</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Maintenance</h4>
+                        <p id="maintain-calories">0 kcal</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Weight Gain</h4>
+                        <p id="gain-calories">0 kcal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="more-tools">
+        <h2>More Fitness Tools</h2>
+        <div class="tools-grid">
+            <div class="tool-item" onclick="alert('Body Fat Calculator - Coming Soon!')">
+                <i class="fas fa-percentage"></i>
+                <h3>Body Fat Calculator</h3>
+                <p>Estimate your body fat percentage using various measurement methods.</p>
+            </div>
+            <div class="tool-item" onclick="alert('Macro Calculator - Coming Soon!')">
+                <i class="fas fa-apple-alt"></i>
+                <h3>Macro Calculator</h3>
+                <p>Calculate your ideal protein, carb, and fat intake for your goals.</p>
+            </div>
+            <div class="tool-item" onclick="alert('One Rep Max Calculator - Coming Soon!')">
+                <i class="fas fa-dumbbell"></i>
+                <h3>1RM Calculator</h3>
+                <p>Estimate your one-rep maximum for strength training exercises.</p>
+            </div>
+            <div class="tool-item" onclick="alert('Water Intake Calculator - Coming Soon!')">
+                <i class="fas fa-tint"></i>
+                <h3>Hydration Calculator</h3>
+                <p>Determine your optimal daily water intake based on your activity level.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How accurate is the BMI calculator?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>BMI is a useful general indicator but doesn't account for muscle mass, bone density, or distribution of fat. Athletes with high muscle mass may have a high BMI but low body fat. It's best used as a screening tool rather than a diagnostic measure.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>What formula is used for calorie calculation?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We use the Mifflin-St Jeor equation, which is considered one of the most accurate formulas for estimating basal metabolic rate (BMR). This is then multiplied by an activity factor to determine your Total Daily Energy Expenditure (TDEE).</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Should I eat my maintenance calories to lose weight?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>No, to lose weight you need to create a calorie deficit. A safe deficit is typically 300-500 calories below your maintenance level. This should result in a weight loss of about 0.5-1 kg per week. For weight gain, you would eat 300-500 calories above maintenance.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How often should I recalculate my calorie needs?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>It's a good idea to recalculate your calorie needs every 4-6 weeks, or whenever your weight changes significantly (5+ kg), your activity level changes substantially, or you hit a plateau in your progress.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>MyFitnessApp</h3>
+                <p>Your all-in-one fitness companion for workouts, nutrition, and tracking progress toward your health goals.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="workout.html">Workout Plans</a></li>
+                    <li><a href="diet.html">Diet Plans</a></li>
+                    <li><a href="tools.html">Fitness Tools</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Recipes</a></li>
+                    <li><a href="#">Meal Prep Guide</a></li>
+                    <li><a href="#">Supplement Guide</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get weekly fitness tips and exclusive content.</p>
+                <form>
+                    <input type="email" placeholder="Your email address" style="padding: 10px; width: 100%; margin-bottom: 10px; border-radius: 4px; border: none;">
+                    <button type="submit" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; width: 100%;">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 MyFitnessApp. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- BMI LOGIC ---
+        function calculateBMI() {
+            const height = document.getElementById('bmi-height').value;
+            const weight = document.getElementById('bmi-weight').value;
+            const resultBox = document.getElementById('bmi-result');
+            const valueText = document.getElementById('bmi-value');
+            const statusText = document.getElementById('bmi-status');
+
+            if (height && weight) {
+                // Formula: weight / ((height/100) * (height/100))
+                const heightInMeters = height / 100;
+                const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+
+                valueText.innerText = bmi;
+                resultBox.style.display = 'block';
+
+                if (bmi < 18.5) {
+                    statusText.innerText = "Underweight (Consider increasing calorie intake)";
+                    statusText.style.color = "#f1c40f"; // Yellow
+                } else if (bmi >= 18.5 && bmi <= 24.9) {
+                    statusText.innerText = "Healthy Weight (Good job! Maintain your current habits)";
+                    statusText.style.color = "#2ecc71"; // Green
+                } else if (bmi >= 25 && bmi <= 29.9) {
+                    statusText.innerText = "Overweight (Consider moderate calorie reduction)";
+                    statusText.style.color = "#e67e22"; // Orange
+                } else {
+                    statusText.innerText = "Obese (Consult a healthcare professional)";
+                    statusText.style.color = "#e74c3c"; // Red
+                }
+            } else {
+                alert("Please enter both height and weight!");
+            }
+        }
+
+        // --- CALORIE LOGIC (Mifflin-St Jeor Equation) ---
+        function calculateCalories() {
+            const gender = document.getElementById('cal-gender').value;
+            const age = parseFloat(document.getElementById('cal-age').value);
+            const weight = parseFloat(document.getElementById('cal-weight').value);
+            const height = parseFloat(document.getElementById('cal-height').value);
+            const activity = parseFloat(document.getElementById('cal-activity').value);
+            
+            const resultBox = document.getElementById('cal-result');
+            const valueText = document.getElementById('cal-value');
+            const lossText = document.getElementById('loss-calories');
+            const maintainText = document.getElementById('maintain-calories');
+            const gainText = document.getElementById('gain-calories');
+
+            if (age && weight && height) {
+                let bmr;
+
+                // Calculate BMR
+                if (gender === 'male') {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+                } else {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                }
+
+                // Calculate Total Daily Energy Expenditure (TDEE)
+                const tdee = Math.round(bmr * activity);
+
+                valueText.innerText = tdee + " kcal";
+                lossText.innerText = (tdee - 500) + " kcal";
+                maintainText.innerText = tdee + " kcal";
+                gainText.innerText = (tdee + 500) + " kcal";
+                
+                resultBox.style.display = 'block';
+            } else {
+                alert("Please fill in all fields!");
+            }
+        }
+
+        // FAQ Accordion Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentNode;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

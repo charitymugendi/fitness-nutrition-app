@@ -3,21 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Login - MyFitnessApp</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Auth Container */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+           /* backdrop-filter: blur(10px);*/
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .auth-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Header */
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        /* Form Styles */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        input {
+            padding: 16px 20px;
+            border: 2px solid #e1e5ee;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input::placeholder {
+            color: #a0a4b8;
+        }
+        
+        /* Button Styles */
+        .cta-button {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .primary {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .primary:active {
+            transform: translateY(1px);
+        }
+        
+        /* Auth Switch */
+        .auth-switch {
+            margin-top: 25px;
+            color: #6c757d;
+            font-size: 15px;
+        }
+        
+        .auth-switch a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .auth-switch a:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .auth-switch a:hover {
+            color: #764ba2;
+        }
+        
+        .auth-switch a:hover:after {
+            width: 100%;
+        }
+        
+        /* Logo/Brand */
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #667eea, #764ba2);
+           /* -webkit-background-clip: text;
+   */         -webkit-text-fill-color: transparent;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            input, .cta-button {
+                padding: 14px 16px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Error Message */
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
 </head>
 <body>
     <main class="auth-container">
-        <h2>Login to Your Account</h2>
-
+        <div class="brand">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 4H10V20H14V4Z" fill="white"/>
+                    <path d="M20 8H16V20H20V8Z" fill="white"/>
+                    <path d="M8 12H4V20H8V12Z" fill="white"/>
+                </svg>
+            </div>
+            <div class="logo-text">MyFitnessApp</div>
+        </div>
+        
+        <h2>Welcome Back</h2>
+        
+        <div id="error-message" class="error-message"></div>
+        
         <form id="loginForm" class="auth-form">
-            <input type="email" id="email" placeholder="Email" required title="Email Address">
+            <input type="email" id="email" placeholder="Email Address" required title="Email Address">
             <input type="password" id="password" placeholder="Password" required title="Password">
-            <button type="submit" class="cta-button primary">Login</button>
+            <button type="submit" class="cta-button primary" id="loginButton">
+            <span class="loading" id="loadingSpinner" style="display: none;"></span>
+                <span id="buttonText">Login</span>
+            </button>
         </form>
         <p class="auth-switch">Don't have an account? <a href="signup.html">Sign Up</a></p>
     </main>
 
-    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorMessage = document.getElementById('error-message');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Show loading state
+                loginButton.disabled = true;
+                buttonText.textContent = 'Logging in...';
+                loadingSpinner.style.display = 'inline-block';
+                errorMessage.style.display = 'none';
+                
+                // Simulate API call (replace with actual authentication)
+                setTimeout(() => {
+                    // This is where you would make your actual API call
+                    // For demo purposes, we'll simulate a successful login
+                    if (email && password) {
+                        // Store auth token (in a real app, this would come from your API)
+                        localStorage.setItem('authToken', 'demo-token-' + Date.now());
+                        localStorage.setItem('userEmail', email);
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'index.html';
+                    } else {
+                        showError('Please enter both email and password');
+                    }
+                    
+                    // Reset button state
+                    resetButtonState();
+                }, 1500);
+            });
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+            
+            function resetButtonState() {
+                loginButton.disabled = false;
+                buttonText.textContent = 'Login';
+                loadingSpinner.style.display = 'none';
+            }
+            
+            // Check if user is already logged in
+            if (localStorage.getItem('authToken')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
 </body>
 </html>

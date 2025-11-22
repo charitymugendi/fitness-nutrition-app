@@ -1,24 +1,413 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Sign Up - MyFitnessApp</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Auth Container */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+           /* backdrop-filter: blur(10px);*/
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .auth-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Header */
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        /* Form Styles */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        input {
+            padding: 16px 20px;
+            border: 2px solid #e1e5ee;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input::placeholder {
+            color: #a0a4b8;
+        }
+        
+        /* Button Styles */
+        .cta-button {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .primary {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .primary:active {
+            transform: translateY(1px);
+        }
+        
+        /* Auth Switch */
+        .auth-switch {
+            margin-top: 25px;
+            color: #6c757d;
+            font-size: 15px;
+        }
+        
+        .auth-switch a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .auth-switch a:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .auth-switch a:hover {
+            color: #764ba2;
+        }
+        
+        .auth-switch a:hover:after {
+            width: 100%;
+        }
+        
+        /* Logo/Brand */
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            input, .cta-button {
+                padding: 14px 16px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Message Styles */
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .success-message {
+            background-color: #d1edff;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .password-strength {
+            margin-top: 5px;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .strength-weak { color: #dc3545; }
+        .strength-medium { color: #ffc107; }
+        .strength-strong { color: #28a745; }
+    </style>
 </head>
 <body>
     <main class="auth-container">
-        <h2>Create Your Account</h2>
-
+        <div class="brand">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 4H10V20H14V4Z" fill="white"/>
+                    <path d="M20 8H16V20H20V8Z" fill="white"/>
+                    <path d="M8 12H4V20H8V12Z" fill="white"/>
+                </svg>
+            </div>
+            <div class="logo-text">MyFitnessApp</div>
+        </div>
+        
+        <h2>Join Our Community</h2>
+        
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+        
         <form id="signupForm" class="auth-form">
             <input type="text" id="name" placeholder="Full Name" required title="Full Name">
-            <input type="email" id="email" placeholder="Email" required title="Email Address">
-            <input type="password" id="password" placeholder="Password" required title="Password">
-            <button type="submit" class="cta-button primary">Sign Up</button>
+            <input type="email" id="email" placeholder="Email Address" required title="Email Address">
+            <input type="password" id="password" placeholder="Password" required title="Password" minlength="6">
+            <div id="password-strength" class="password-strength"></div>
+            <button type="submit" class="cta-button primary" id="signupButton">
+                <span class="loading" id="loadingSpinner" style="display: none;"></span>
+                <span id="buttonText">Create Account</span>
+            </button>
         </form>
         <p class="auth-switch">Already have an account? <a href="login.html">Login</a></p>
     </main>
 
-    <script src="js/auth.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:4000';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const signupButton = document.getElementById('signupButton');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const passwordInput = document.getElementById('password');
+            const passwordStrength = document.getElementById('password-strength');
+            
+            // Password strength indicator
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 'Weak';
+                let strengthClass = 'strength-weak';
+                
+                if (password.length >= 8) {
+                    strength = 'Medium';
+                    strengthClass = 'strength-medium';
+                }
+                
+                if (password.length >= 10 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+                    strength = 'Strong';
+                    strengthClass = 'strength-strong';
+                }
+                
+                if (password.length > 0) {
+                    passwordStrength.textContent = `Password strength: ${strength}`;
+                    passwordStrength.className = `password-strength ${strengthClass}`;
+                } else {
+                    passwordStrength.textContent = '';
+                }
+            });
+            
+            signupForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Basic validation
+                if (!name || !email || !password) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters long');
+                    return;
+                }
+                
+                if (!validateEmail(email)) {
+                    showError('Please enter a valid email address');
+                    return;
+                }
+                
+                // Show loading state
+                signupButton.disabled = true;
+                buttonText.textContent = 'Creating Account...';
+                loadingSpinner.style.display = 'inline-block';
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                try {
+                    // Make API call to backend
+                    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            password: password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showSuccess('Account created successfully! Redirecting to login...');
+                        // Clear form
+                        signupForm.reset();
+                        passwordStrength.textContent = '';
+                        
+                        // Redirect to login after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        showError(data.message || 'Failed to create account');
+                    }
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    showError('Network error. Please try again.');
+                } finally {
+                    // Reset button state
+                    resetButtonState();
+                }
+            });
+            
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+            
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            }
+            
+            function resetButtonState() {
+                signupButton.disabled = false;
+                buttonText.textContent = 'Create Account';
+                loadingSpinner.style.display = 'none';
+            }
+            
+            // Check if user is already logged in
+            if (localStorage.getItem('authToken')) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
 </body>
 </html>

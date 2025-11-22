@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Workouts For Kids</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .workout-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .subtext {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+
+        .content-area {
+            margin-top: 40px;
+        }
+
+        .section-label {
+            font-size: 1.1rem;
+            color: #4CAF50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .image-wrapper {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-body h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-body p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Exercise Details Styling */
+        .exercise-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .exercise-steps {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .exercise-steps li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+        }
+
+        .exercise-steps li:before {
+            content: '•';
+            color: #4CAF50;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .exercise-muscles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .muscle-tag {
+            background: #e8f5e9;
+            color: #4CAF50;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .exercise-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* Navigation Styles */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4CAF50;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #4CAF50;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #4CAF50;
+            border-radius: 2px;
+        }
+        
+        .auth-status {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-status a {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-status a:first-child {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .auth-status a:last-child {
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .auth-status a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Fun elements for kids */
+        .fun-fact {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .fun-fact h4 {
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .easy {
+            background-color: #e8f5e9;
+            color: #4CAF50;
+        }
+
+        .medium {
+            background-color: #fff3e0;
+            color: #ff9800;
+        }
+
+        .hard {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtext {
+                font-size: 1rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <div class="logo">KidsFitFun</div>
+        
+        <div class="auth-status">
+            <a href="signup.html">Parent Sign Up</a>
+            <a href="login.html">Login</a>
+        </div>
+    </header>
+
+    <section class="workout-section">
+        <div class="container">
+            <div class="header-content">
+                <h1>Fun Workouts For Kids</h1>
+                <p class="subtext">Discover exciting exercises and activities designed to keep children active, healthy, and having fun. Each exercise includes simple instructions and focuses on developing coordination, strength, and flexibility.</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">FUN STRENGTH EXERCISES</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1594736797933-d0401ba94693?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing animal walks">
+                        </div>
+                        <div class="card-body">
+                            <h3>Animal Walks</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 30 seconds each</span>
+                            </div>
+                            <div class="difficulty easy">Easy</div>
+                            <p>Fun animal-inspired movements that build full-body strength and coordination while sparking imagination.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Bear Walk: Walk on hands and feet with straight legs</li>
+                                    <li>Crab Walk: Move backward on hands and feet with belly up</li>
+                                    <li>Frog Jumps: Squat down and jump forward like a frog</li>
+                                    <li>Penguin Waddle: Walk with legs together and arms at sides</li>
+                                    <li>Elephant Swing: Bend forward and swing arms like a trunk</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Animal walks help develop bilateral coordination - using both sides of the body together!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Full Body</span>
+                                    <span class="muscle-tag">Coordination</span>
+                                    <span class="muscle-tag">Balance</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1548690312-e3b507d8fc90?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing superhero poses">
+                        </div>
+                        <div class="card-body">
+                            <h3>Superhero Poses</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Hold each pose for 15-20 seconds</span>
+                            </div>
+                            <div class="difficulty easy">Easy</div>
+                            <p>Channel inner superheroes with these fun strength poses that build confidence and body awareness.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Superman: Lie on stomach, lift arms and legs off ground</li>
+                                    <li>Wonder Woman: Stand strong with hands on hips</li>
+                                    <li>Spiderman Crawl: Alternate bringing knees to elbows</li>
+                                    <li>Hulk Smash: Squat down then jump up with arms overhead</li>
+                                    <li>Captain America Shield: Hold plank position with one arm extended</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Superhero poses help children develop core strength which improves posture and balance!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Core</span>
+                                    <span class="muscle-tag">Legs</span>
+                                    <span class="muscle-tag">Back</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing obstacle course">
+                        </div>
+                        <div class="card-body">
+                            <h3>Mini Obstacle Course</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Complete course 3-5 times</span>
+                            </div>
+                            <div class="difficulty medium">Medium</div>
+                            <p>Create a simple obstacle course using household items to build agility, problem-solving skills, and confidence.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Crawl under a table or through a tunnel</li>
+                                    <li>Step carefully between pillows on the floor</li>
+                                    <li>Jump over a line of books or small obstacles</li>
+                                    <li>Balance walk along a taped line on the floor</li>
+                                    <li>Toss a soft toy into a basket at the finish line</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Obstacle courses help develop executive function skills like planning and problem-solving!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Full Body</span>
+                                    <span class="muscle-tag">Agility</span>
+                                    <span class="muscle-tag">Balance</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">ACTIVE GAMES & COORDINATION</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1594736797933-d0401ba94693?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids playing Simon Says">
+                        </div>
+                        <div class="card-body">
+                            <h3>Active Simon Says</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Play for 10-15 minutes</span>
+                            </div>
+                            <div class="difficulty easy">Easy</div>
+                            <p>A classic game with active movements that builds listening skills, coordination, and body control.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Simon says touch your toes</li>
+                                    <li>Simon says do 5 jumping jacks</li>
+                                    <li>Simon says balance on one foot</li>
+                                    <li>Simon says do a silly dance</li>
+                                    <li>Simon says wiggle like a worm</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Simon Says helps develop inhibitory control - the ability to stop an action when needed!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Full Body</span>
+                                    <span class="muscle-tag">Listening Skills</span>
+                                    <span class="muscle-tag">Coordination</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing balloon volleyball">
+                        </div>
+                        <div class="card-body">
+                            <h3>Balloon Volleyball</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Play for 10-15 minutes</span>
+                            </div>
+                            <div class="difficulty medium">Medium</div>
+                            <p>A safe indoor game that develops hand-eye coordination, timing, and teamwork skills.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Blow up a balloon and create a "net" with a string or tape</li>
+                                    <li>Hit the balloon back and forth without letting it touch the ground</li>
+                                    <li>Try using different body parts to hit the balloon</li>
+                                    <li>Count how many times you can keep it in the air</li>
+                                    <li>Challenge siblings or parents to join the fun</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Balloon volleyball helps develop tracking skills - following objects with your eyes!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Arms</span>
+                                    <span class="muscle-tag">Hand-Eye Coordination</span>
+                                    <span class="muscle-tag">Teamwork</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing freeze dance">
+                        </div>
+                        <div class="card-body">
+                            <h3>Freeze Dance</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Play for 10-15 minutes</span>
+                            </div>
+                            <div class="difficulty easy">Easy</div>
+                            <p>A high-energy game that combines dancing, listening skills, and body control in a fun format.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Play fun, upbeat music</li>
+                                    <li>Dance freely while the music plays</li>
+                                    <li>Freeze in place when the music stops</li>
+                                    <li>Try different dance styles each round</li>
+                                    <li>Make funny poses when you freeze</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Freeze dance helps develop auditory processing - connecting what you hear with how you move!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Full Body</span>
+                                    <span class="muscle-tag">Rhythm</span>
+                                    <span class="muscle-tag">Listening Skills</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">FLEXIBILITY & BALANCE</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1571019614287-83aeef0cb5d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing yoga poses">
+                        </div>
+                        <div class="card-body">
+                            <h3>Kids Yoga Adventure</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Hold poses for 15-30 seconds</span>
+                            </div>
+                            <div class="difficulty easy">Easy</div>
+                            <p>Simple yoga poses presented as an adventure story to build flexibility, balance, and body awareness.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Downward Dog: Be a triangle-shaped mountain</li>
+                                    <li>Tree Pose: Balance like a tall tree in the forest</li>
+                                    <li>Cat-Cow: Arch and round your back like a stretching cat</li>
+                                    <li>Butterfly Pose: Sit with feet together and flap your wings</li>
+                                    <li>Child's Pose: Curl up small like a sleepy mouse</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Yoga helps children develop proprioception - knowing where their body is in space!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Flexibility</span>
+                                    <span class="muscle-tag">Balance</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing balance challenges">
+                        </div>
+                        <div class="card-body">
+                            <h3>Balance Challenges</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Try each challenge for 20-30 seconds</span>
+                            </div>
+                            <div class="difficulty medium">Medium</div>
+                            <p>Fun balance activities that improve stability, coordination, and focus while having fun with challenges.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Flamingo Stand: Balance on one foot like a flamingo</li>
+                                    <li>Balance Beam: Walk along a line on the floor</li>
+                                    <li>Statue Game: Balance in different positions without moving</li>
+                                    <li>Heel-to-Toe Walk: Walk in a straight line placing heel to toe</li>
+                                    <li>Balance with a Book: Try balancing a book on your head while walking</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Balance activities strengthen the vestibular system - our internal balance system!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Legs</span>
+                                    <span class="muscle-tag">Core</span>
+                                    <span class="muscle-tag">Focus</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Kids doing stretching games">
+                        </div>
+                        <div class="card-body">
+                            <h3>Stretching Games</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>Hold stretches for 15-20 seconds</span>
+                            </div>
+                            <div class="difficulty easy">Easy</div>
+                            <p>Creative stretching activities that make flexibility training fun and engaging for young bodies.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Rainbow Reach: Stretch arms high and side to side like drawing a rainbow</li>
+                                    <li>Toe Touch Challenge: See how close you can get to touching your toes</li>
+                                    <li>Alphabet Stretch: Use your body to form different letters</li>
+                                    <li>Stretching Story: Follow along with a story that includes different stretches</li>
+                                    <li>Mirror Stretch: Copy a partner's stretching movements</li>
+                                </ul>
+                                <div class="fun-fact">
+                                    <h4>Fun Fact!</h4>
+                                    <p>Stretching helps muscles grow properly and can prevent injuries during play!</p>
+                                </div>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Flexibility</span>
+                                    <span class="muscle-tag">Full Body</span>
+                                    <span class="muscle-tag">Coordination</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

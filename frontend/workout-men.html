@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workouts For Men</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .workout-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .subtext {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #3498db, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+
+        .content-area {
+            margin-top: 40px;
+        }
+
+        .section-label {
+            font-size: 1.1rem;
+            color: #3498db;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .image-wrapper {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-body h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-body p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Exercise Details Styling */
+        .exercise-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .exercise-steps {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .exercise-steps li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+        }
+
+        .exercise-steps li:before {
+            content: '•';
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .exercise-muscles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .muscle-tag {
+            background: #e1f0fa;
+            color: #3498db;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .exercise-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* Navigation Styles */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #3498db;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #3498db;
+            border-radius: 2px;
+        }
+        
+        .auth-status {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-status a {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-status a:first-child {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .auth-status a:last-child {
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+        
+        .auth-status a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtext {
+                font-size: 1rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="workout.html" class="active">Workouts</a>
+            <a href="diet.html">Diet Plans</a>
+            <a href="tools.html">Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="auth-status">
+            <a href="signup.html">Register</a>
+            <a href="login.html">Login</a>
+        </div>
+    </header>
+
+    <section class="workout-section">
+        <div class="container">
+            <div class="header-content">
+                <h1>Workouts For Men</h1>
+                <p class="subtext">Discover powerful exercises specifically designed for men's fitness goals. Build strength, muscle mass, and athletic performance with these proven training techniques.</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">STRENGTH & MASS BUILDING</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing barbell squats">
+                        </div>
+                        <div class="card-body">
+                            <h3>Barbell Squats</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>4 sets of 6-8 reps</span>
+                            </div>
+                            <p>The king of all exercises for building lower body strength and overall muscle mass. Essential for developing powerful legs and core stability.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Position barbell across upper back, not neck</li>
+                                    <li>Keep chest up and back straight throughout movement</li>
+                                    <li>Descend until thighs are parallel to floor or lower</li>
+                                    <li>Drive through heels to return to standing position</li>
+                                    <li>Maintain tight core and neutral spine</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Quads</span>
+                                    <span class="muscle-tag">Glutes</span>
+                                    <span class="muscle-tag">Hamstrings</span>
+                                    <span class="muscle-tag">Core</span>
+                                    <span class="muscle-tag">Lower Back</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing bench press">
+                        </div>
+                        <div class="card-body">
+                            <h3>Barbell Bench Press</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>4 sets of 6-10 reps</span>
+                            </div>
+                            <p>The ultimate upper body mass builder. Develops chest, shoulders, and triceps for that powerful athletic look.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Lie flat on bench with feet firmly on floor</li>
+                                    <li>Grip barbell slightly wider than shoulder-width</li>
+                                    <li>Lower bar to mid-chest with control</li>
+                                    <li>Press bar back to starting position explosively</li>
+                                    <li>Keep shoulder blades retracted throughout movement</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Chest</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Triceps</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing deadlifts">
+                        </div>
+                        <div class="card-body">
+                            <h3>Conventional Deadlifts</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 4-6 reps</span>
+                            </div>
+                            <p>The ultimate test of total body strength. Builds a powerful back, legs, and grip while stimulating massive hormonal response.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand with feet hip-width apart, barbell over mid-foot</li>
+                                    <li>Bend at hips and knees to grip the bar</li>
+                                    <li>Keep back straight and chest up as you lift</li>
+                                    <li>Drive hips forward to stand up with the weight</li>
+                                    <li>Lower with control, maintaining proper form</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Back</span>
+                                    <span class="muscle-tag">Glutes</span>
+                                    <span class="muscle-tag">Hamstrings</span>
+                                    <span class="muscle-tag">Forearms</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">UPPER BODY DEVELOPMENT</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1534367507877-0edd93bd013b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing pull-ups">
+                        </div>
+                        <div class="card-body">
+                            <h3>Weighted Pull-ups</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>4 sets of 6-10 reps</span>
+                            </div>
+                            <p>Build a powerful, V-tapered back with this fundamental upper body exercise. Essential for complete back development.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Grip bar slightly wider than shoulder-width</li>
+                                    <li>Pull yourself up until chin clears the bar</li>
+                                    <li>Squeeze shoulder blades together at the top</li>
+                                    <li>Lower yourself with control to full extension</li>
+                                    <li>Add weight with dip belt for progressive overload</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Lats</span>
+                                    <span class="muscle-tag">Biceps</span>
+                                    <span class="muscle-tag">Rear Delts</span>
+                                    <span class="muscle-tag">Forearms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing overhead press">
+                        </div>
+                        <div class="card-body">
+                            <h3>Standing Overhead Press</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>4 sets of 6-8 reps</span>
+                            </div>
+                            <p>Develop powerful shoulders and core stability with this compound movement. Builds impressive shoulder mass and strength.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand with feet shoulder-width apart</li>
+                                    <li>Grip barbell at shoulder height with palms forward</li>
+                                    <li>Press bar overhead until arms are fully extended</li>
+                                    <li>Keep core tight and avoid excessive back arch</li>
+                                    <li>Lower with control to starting position</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Triceps</span>
+                                    <span class="muscle-tag">Upper Chest</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing bent-over rows">
+                        </div>
+                        <div class="card-body">
+                            <h3>Bent-Over Barbell Rows</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>4 sets of 8-10 reps</span>
+                            </div>
+                            <p>Build thickness and density in your back muscles. Essential for developing a powerful, complete back.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand with feet shoulder-width apart</li>
+                                    <li>Hinge at hips until torso is near parallel to floor</li>
+                                    <li>Pull barbell to lower chest/upper abdomen</li>
+                                    <li>Squeeze shoulder blades together at peak contraction</li>
+                                    <li>Lower with control and repeat</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Back</span>
+                                    <span class="muscle-tag">Biceps</span>
+                                    <span class="muscle-tag">Rear Delts</span>
+                                    <span class="muscle-tag">Forearms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">ARMS & SHOULDERS</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing barbell curls">
+                        </div>
+                        <div class="card-body">
+                            <h3>Barbell Curls</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 8-12 reps</span>
+                            </div>
+                            <p>The classic bicep builder for adding mass and peak to your arms. Essential for developing impressive bicep size.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand holding barbell with underhand grip</li>
+                                    <li>Keep elbows pinned to your sides</li>
+                                    <li>Curl weight up toward shoulders</li>
+                                    <li>Squeeze biceps hard at top of movement</li>
+                                    <li>Lower with control, don't use momentum</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Biceps</span>
+                                    <span class="muscle-tag">Forearms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing close-grip bench press">
+                        </div>
+                        <div class="card-body">
+                            <h3>Close-Grip Bench Press</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 8-10 reps</span>
+                            </div>
+                            <p>Build massive triceps while maintaining chest engagement. The most effective compound movement for tricep development.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Lie on bench with hands shoulder-width apart</li>
+                                    <li>Lower bar to lower chest/mid-sternum</li>
+                                    <li>Keep elbows tucked close to body</li>
+                                    <li>Press bar back to starting position</li>
+                                    <li>Focus on tricep contraction throughout movement</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Triceps</span>
+                                    <span class="muscle-tag">Chest</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Man doing lateral raises">
+                        </div>
+                        <div class="card-body">
+                            <h3>Dumbbell Lateral Raises</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 12-15 reps</span>
+                            </div>
+                            <p>Develop broad, impressive shoulders with this isolation exercise. Essential for creating that coveted V-taper.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand holding dumbbells at your sides</li>
+                                    <li>Raise arms out to sides until parallel to floor</li>
+                                    <li>Keep slight bend in elbows throughout movement</li>
+                                    <li>Lower with control, don't let weights drop</li>
+                                    <li>Focus on shoulder contraction, not weight</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Traps</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

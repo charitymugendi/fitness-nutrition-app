@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workouts For Women</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .workout-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            color: #e84393;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .subtext {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #e84393, transparent);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+
+        .content-area {
+            margin-top: 40px;
+        }
+
+        .section-label {
+            font-size: 1.1rem;
+            color: #e84393;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .image-wrapper {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-body h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-body p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Exercise Details Styling */
+        .exercise-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .exercise-steps {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .exercise-steps li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+        }
+
+        .exercise-steps li:before {
+            content: '•';
+            color: #e84393;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .exercise-muscles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .muscle-tag {
+            background: #fce4ec;
+            color: #e84393;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .exercise-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* Navigation Styles */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e84393;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #e84393;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e84393;
+            border-radius: 2px;
+        }
+        
+        .auth-status {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-status a {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-status a:first-child {
+            background-color: #e84393;
+            color: white;
+        }
+        
+        .auth-status a:last-child {
+            border: 1px solid #e84393;
+            color: #e84393;
+        }
+        
+        .auth-status a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtext {
+                font-size: 1rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <div class="logo">MyFitnessApp</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="workout.html" class="active">Workouts</a>
+            <a href="diet.html">Diet Plans</a>
+            <a href="tools.html">Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="auth-status">
+            <a href="signup.html">Register</a>
+            <a href="login.html">Login</a>
+        </div>
+    </header>
+
+    <section class="workout-section">
+        <div class="container">
+            <div class="header-content">
+                <h1>Workouts For Women</h1>
+                <p class="subtext">Discover effective exercises specifically designed for women's fitness goals. Each exercise includes step-by-step instructions and targets key muscle groups for optimal results.</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">STRENGTH & TONING EXERCISES</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing goblet squats">
+                        </div>
+                        <div class="card-body">
+                            <h3>Goblet Squats</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 12-15 reps</span>
+                            </div>
+                            <p>Excellent for building lower body strength with perfect form. Targets quads, glutes, and hamstrings while engaging the core.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Hold a dumbbell vertically against your chest with both hands</li>
+                                    <li>Keep your chest up and back straight as you descend</li>
+                                    <li>Lower until your thighs are parallel to the floor</li>
+                                    <li>Drive through your heels to return to standing position</li>
+                                    <li>Keep your knees tracking over your toes throughout the movement</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Quads</span>
+                                    <span class="muscle-tag">Glutes</span>
+                                    <span class="muscle-tag">Hamstrings</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing hip thrusts">
+                        </div>
+                        <div class="card-body">
+                            <h3>Hip Thrusts</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 15-20 reps</span>
+                            </div>
+                            <p>The most effective exercise for building and shaping the glutes without adding bulk to thighs. Essential for creating a lifted appearance.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Sit on the floor with your upper back against a bench</li>
+                                    <li>Place a barbell or dumbbell over your hips</li>
+                                    <li>Drive through your heels to lift your hips until your body forms a straight line</li>
+                                    <li>Squeeze your glutes hard at the top position</li>
+                                    <li>Lower with control and repeat without letting your glutes touch the floor</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Glutes</span>
+                                    <span class="muscle-tag">Hamstrings</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing push-ups">
+                        </div>
+                        <div class="card-body">
+                            <h3>Modified Push-ups</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 8-12 reps</span>
+                            </div>
+                            <p>Build upper body strength with proper form. Perfect for developing chest, shoulders, and arms while maintaining feminine proportions.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Start on your knees instead of toes for easier variation</li>
+                                    <li>Keep your body in a straight line from knees to head</li>
+                                    <li>Place hands slightly wider than shoulder-width apart</li>
+                                    <li>Lower your chest toward the floor while keeping elbows close to your body</li>
+                                    <li>Push back to starting position with control</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Chest</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Triceps</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">CORE & STABILITY EXERCISES</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing planks">
+                        </div>
+                        <div class="card-body">
+                            <h3>Forearm Planks</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 30-60 seconds</span>
+                            </div>
+                            <p>Build core stability and endurance with this fundamental exercise. Essential for posture improvement and back health.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Start face down with forearms and toes on the floor</li>
+                                    <li>Elbows directly under your shoulders</li>
+                                    <li>Lift your body off the floor, forming a straight line from head to heels</li>
+                                    <li>Engage your core and glutes to maintain position</li>
+                                    <li>Keep your neck neutral and breathe steadily</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Core</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Glutes</span>
+                                    <span class="muscle-tag">Back</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1571019614287-83aeef0cb5d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing bird-dog exercise">
+                        </div>
+                        <div class="card-body">
+                            <h3>Bird-Dog</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 10-12 reps per side</span>
+                            </div>
+                            <p>Improve core stability and coordination while targeting the deep abdominal muscles and lower back.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Start on all fours with hands under shoulders and knees under hips</li>
+                                    <li>Extend your right arm forward and left leg back simultaneously</li>
+                                    <li>Keep your hips square to the floor and avoid rotating</li>
+                                    <li>Hold for 2 seconds, then return to starting position</li>
+                                    <li>Alternate sides and maintain controlled movements</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Core</span>
+                                    <span class="muscle-tag">Lower Back</span>
+                                    <span class="muscle-tag">Glutes</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1594736797933-d0401ba94693?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing Russian twists">
+                        </div>
+                        <div class="card-body">
+                            <h3>Russian Twists</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 15-20 reps</span>
+                            </div>
+                            <p>Target your obliques and improve rotational core strength for better functional fitness and waist definition.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Sit on the floor with knees bent and feet elevated</li>
+                                    <li>Lean back slightly while keeping your back straight</li>
+                                    <li>Hold a weight or medicine ball with both hands</li>
+                                    <li>Rotate your torso to touch the weight to the floor on each side</li>
+                                    <li>Keep your movements controlled and avoid using momentum</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Obliques</span>
+                                    <span class="muscle-tag">Core</span>
+                                    <span class="muscle-tag">Hip Flexors</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="content-area">
+                <h2 class="section-label">UPPER BODY SCULPTING</h2>
+
+                <div class="card-grid">
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing bent-over rows">
+                        </div>
+                        <div class="card-body">
+                            <h3>Bent-Over Rows</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 12-15 reps</span>
+                            </div>
+                            <p>Develop a strong, defined back and improve posture. Essential for balancing upper body development.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand with feet shoulder-width apart, holding dumbbells</li>
+                                    <li>Hinge at your hips until your torso is nearly parallel to the floor</li>
+                                    <li>Keep your back straight and core engaged</li>
+                                    <li>Pull the dumbbells toward your lower chest</li>
+                                    <li>Squeeze your shoulder blades together at the top</li>
+                                    <li>Lower with control and repeat</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Back</span>
+                                    <span class="muscle-tag">Biceps</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Core</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing shoulder press">
+                        </div>
+                        <div class="card-body">
+                            <h3>Dumbbell Shoulder Press</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 10-12 reps</span>
+                            </div>
+                            <p>Build strong, sculpted shoulders that enhance your silhouette and improve upper body strength.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Sit on a bench with back support, holding dumbbells at shoulder height</li>
+                                    <li>Palms facing forward, elbows at 90-degree angles</li>
+                                    <li>Press the dumbbells overhead until arms are fully extended</li>
+                                    <li>Avoid arching your back during the movement</li>
+                                    <li>Lower with control to starting position</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Shoulders</span>
+                                    <span class="muscle-tag">Triceps</span>
+                                    <span class="muscle-tag">Upper Back</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Woman doing tricep extensions">
+                        </div>
+                        <div class="card-body">
+                            <h3>Tricep Extensions</h3>
+                            <div class="exercise-meta">
+                                <i class="far fa-clock"></i>
+                                <span>3 sets of 12-15 reps</span>
+                            </div>
+                            <p>Tone the back of your arms for a sculpted appearance. Essential for eliminating arm jiggle and creating definition.</p>
+                            <div class="exercise-details">
+                                <ul class="exercise-steps">
+                                    <li>Stand or sit holding a dumbbell with both hands overhead</li>
+                                    <li>Keep your elbows close to your ears and pointing forward</li>
+                                    <li>Lower the dumbbell behind your head by bending your elbows</li>
+                                    <li>Extend your arms to return to starting position</li>
+                                    <li>Keep your core engaged and avoid arching your back</li>
+                                </ul>
+                                <div class="exercise-muscles">
+                                    <span class="muscle-tag">Triceps</span>
+                                    <span class="muscle-tag">Shoulders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

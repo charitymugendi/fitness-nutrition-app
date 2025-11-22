@@ -3,85 +3,1676 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-
-    <!-- NAVBAR CONTAINER -->
-    <header class="navbar-container">
-        <div class="logo">MyFitnessApp</div>
-
-        <!-- Main Navigation Links -->
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="profile.html">Profile</a>
-            <a href="workout.html">Workout</a>
-            <a href="nutrition.html">Nutrition</a>
-            <a href="community.html">Community</a>
-            <a href="blog.html">Blog</a>
-        </nav>
-
-        <!-- User Status/Auth Links (Inline styles removed, using CSS class) -->
-        <div class="auth-status">
-            <!-- Hidden by default via CSS -->
-            <span id="welcome-message" class="hidden-initial">Hi admin</span>
-            
-            <!-- Visible by default -->
-            <a href="login.html" id="login-link">Login</a>
-            
-            <!-- Hidden by default via CSS -->
-            <a href="#" id="logout-link" class="hidden-initial">Logout</a>
-        </div>
-    </header>
-
-    <!-- MAIN CONTENT AREA -->
-    <main class="dashboard-content">
-        <h1>Welcome to MyFitnessApp</h1>
-        <img src="img/anatomy-chart.png" alt="Labeled Human Anatomy for Exercise" class="anatomy-image">
-
-        <section id="workouts">
-            <h2>Workouts</h2>
-            <div id="workoutList" class="data-grid">
-                <!-- Workout cards will be inserted here by JavaScript -->
-            </div>
-        </section>
-
-        <section id="nutrition">
-            <h2>Nutrition Tips</h2>
-            <div id="nutritionList" class="data-grid">
-                <!-- Nutrition tips will be inserted here by JavaScript -->
-            </div>
-        </section>
-    </main>
-    </main>
+    <title>Fitness Pro - Dashboard</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 3. FOOTER -->
-    <footer class="app-footer">
-        <div class="footer-section footer-logo">
-            <h3>MyFitnessApp</h3>
-            <p>&copy; 2024 MyFitnessApp. All rights reserved.</p>
-            <p class="tagline">Your partner in health and progress.</p>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #1f2937;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link.active {
+            background-color: #eff6ff;
+            color: #3b82f6;
+            border-right: 3px solid #3b82f6;
+        }
+        
+        .nav-link:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .workout-completed {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .streak-card {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+        
+        .calories-card {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+        
+        /* Profile Page Styles */
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .btn-secondary:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+        }
+
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info-box {
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #4CAF50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-overlay {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #4CAF50;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-overlay:hover {
+            background: #45a049;
+            transform: scale(1.1);
+        }
+
+        .username {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .user-title {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .user-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .gender-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .gender-icon {
+            font-size: 1.1rem;
+        }
+
+        .male { color: #2196F3; }
+        .female { color: #E91E63; }
+        .other { color: #9C27B0; }
+
+        .social-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-button {
+            background: #f8f9fa;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .metric-button:hover {
+            background: #e9ecef;
+            color: #4CAF50;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #4CAF50;
+        }
+
+        .section-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .metrics-box {
+            width: 100%;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .metric-row {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .metric-row:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .editable {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .editable:after {
+            content: '✎';
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: #4CAF50;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .editable:hover:after {
+            opacity: 1;
+        }
+
+        .progress-section {
+            margin-top: 10px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-percentage {
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .goals-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .goal-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .goal-card:hover {
+            background: #e9ecef;
+            transform: translateY(-5px);
+        }
+
+        .goal-icon {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .goal-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .goal-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4CAF50;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .gender-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .gender-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gender-option:hover {
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+        }
+
+        .gender-option.selected {
+            border-color: #4CAF50;
+            background: #f0f9f0;
+        }
+
+        .gender-option i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1001;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .goals-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .profile-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .gender-options {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 50;
+                height: 100vh;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+        }
+        
+        /* Page transition */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden fixed top-4 left-4 z-50">
+        <button id="mobile-menu-button" class="p-2 rounded-md bg-blue-600 text-white">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile -->
+    <div id="overlay" class="overlay"></div>
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-white shadow-lg z-30">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-dumbbell text-white"></i>
+                    </div>
+                    <span class="ml-3 text-xl font-bold text-gray-800">Fitness Pro</span>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
+                         alt="User Profile" class="w-12 h-12 rounded-full object-cover">
+                    <div class="ml-3">
+                        <p class="font-semibold text-gray-800">John Doe</p>
+                        <p class="text-sm text-gray-500">Pro Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="mt-6">
+                <a href="#" class="nav-link active block py-3 px-6 text-gray-700 hover:bg-gray-50" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt w-5 mr-3 text-center"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link block py-3 px-6 text-gray-700 hover:bg-gray-50" data-page="profile">
+                    <i class="fas fa-user w-5 mr-3 text-center"></i>
+                    My Profile
+                </a>
+                <a href="#" class="nav-link block py-3 px-6 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-running w-5 mr-3 text-center"></i>
+                    Workouts
+                </a>
+                <a href="#" class="nav-link block py-3 px-6 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-utensils w-5 mr-3 text-center"></i>
+                    Diet Plans
+                </a>
+                <a href="#" class="nav-link block py-3 px-6 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-chart-line w-5 mr-3 text-center"></i>
+                    Progress
+                </a>
+                <a href="#" class="nav-link block py-3 px-6 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-cog w-5 mr-3 text-center"></i>
+                    Settings
+                </a>
+                <a href="#" class="nav-link block py-3 px-6 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-sign-out-alt w-5 mr-3 text-center"></i>
+                    Logout
+                </a>
+            </nav>
         </div>
 
-        <div class="footer-section footer-links">
-            <h4>Quick Links</h4>
-            <a href="about.html">About Us</a>
-            <a href="contact.html">Contact</a>
-            <a href="support.html">Help & Support</a>
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <!-- Header -->
+                <header class="bg-white shadow-sm border-b border-gray-200">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between items-center py-4">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                                <p class="text-gray-500">Welcome back, John! Ready for your next workout?</p>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <button class="relative p-2 text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-bell text-xl"></i>
+                                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
+                                </button>
+                                <div class="relative">
+                                    <button class="flex items-center text-sm focus:outline-none">
+                                        <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dashboard Content -->
+                <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <!-- Stats Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Workout Stats -->
+                        <div class="dashboard-card stats-card p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-blue-100">Workouts Completed</p>
+                                    <h3 class="text-3xl font-bold mt-2">24</h3>
+                                    <p class="text-blue-100 text-sm mt-1">+5 this week</p>
+                                </div>
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-running text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Streak -->
+                        <div class="dashboard-card streak-card p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-green-100">Current Streak</p>
+                                    <h3 class="text-3xl font-bold mt-2">7 days</h3>
+                                    <p class="text-green-100 text-sm mt-1">Keep going!</p>
+                                </div>
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-fire text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calories Burned -->
+                        <div class="dashboard-card calories-card p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-yellow-100">Calories Burned</p>
+                                    <h3 class="text-3xl font-bold mt-2">3,450</h3>
+                                    <p class="text-yellow-100 text-sm mt-1">This week</p>
+                                </div>
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-burn text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Workout Time -->
+                        <div class="dashboard-card bg-white p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-gray-500">Total Workout Time</p>
+                                    <h3 class="text-3xl font-bold text-gray-800 mt-2">12h 30m</h3>
+                                    <p class="text-gray-500 text-sm mt-1">This month</p>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-clock text-blue-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left Column -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <!-- Current Challenge -->
+                            <div class="dashboard-card p-6">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-xl font-bold text-gray-800">Current Challenge</h2>
+                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">Day 11/28</span>
+                                </div>
+                                <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white">
+                                    <h3 class="text-2xl font-bold mb-2">Full Body Transformation</h3>
+                                    <p class="text-blue-100 mb-4">36% completed - 10 days remaining</p>
+                                    <div class="w-full bg-blue-400 bg-opacity-30 rounded-full h-3 mb-4">
+                                        <div class="bg-white h-3 rounded-full" style="width: 36%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span>Start: Oct 1</span>
+                                        <span>End: Oct 28</span>
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                                        Continue Challenge
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Recent Activity -->
+                            <div class="dashboard-card p-6">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">Recent Activity</h2>
+                                <div class="space-y-4">
+                                    <div class="flex items-center p-4 bg-green-50 rounded-lg">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-check text-white"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="font-semibold text-gray-800">Full Body Workout</p>
+                                            <p class="text-sm text-gray-600">Completed 45 min ago</p>
+                                        </div>
+                                        <div class="ml-auto text-right">
+                                            <p class="font-semibold text-gray-800">35 min</p>
+                                            <p class="text-sm text-green-600">280 cal</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center p-4 bg-blue-50 rounded-lg">
+                                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-running text-white"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="font-semibold text-gray-800">Cardio Session</p>
+                                            <p class="text-sm text-gray-600">Completed 3 hours ago</p>
+                                        </div>
+                                        <div class="ml-auto text-right">
+                                            <p class="font-semibold text-gray-800">25 min</p>
+                                            <p class="text-sm text-blue-600">180 cal</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-dumbbell text-white"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="font-semibold text-gray-800">Strength Training</p>
+                                            <p class="text-sm text-gray-600">Completed yesterday</p>
+                                        </div>
+                                        <div class="ml-auto text-right">
+                                            <p class="font-semibold text-gray-800">50 min</p>
+                                            <p class="text-sm text-purple-600">320 cal</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-8">
+                            <!-- Weekly Progress -->
+                            <div class="dashboard-card p-6">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">Weekly Progress</h2>
+                                <div class="flex justify-center mb-4">
+                                    <div class="relative w-40 h-40">
+                                        <svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
+                                            <circle class="text-gray-200 stroke-current" stroke-width="10" cx="50" cy="50" r="40" fill="transparent"></circle>
+                                            <circle class="progress-ring-circle text-blue-600 stroke-current" stroke-width="10" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="75.36"></circle>
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="text-center">
+                                                <span class="text-2xl font-bold text-gray-800">70%</span>
+                                                <p class="text-sm text-gray-600">Weekly Goal</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Workouts</span>
+                                        <span class="font-semibold">5/7</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Minutes</span>
+                                        <span class="font-semibold">210/300</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-600">Calories</span>
+                                        <span class="font-semibold">1,850/2,500</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="dashboard-card p-6">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">Quick Actions</h2>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <button class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-center transition duration-200">
+                                        <i class="fas fa-plus-circle text-blue-600 text-2xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Start Workout</p>
+                                    </button>
+                                    <button class="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-center transition duration-200">
+                                        <i class="fas fa-utensils text-green-600 text-2xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Meal Plan</p>
+                                    </button>
+                                    <button class="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-center transition duration-200">
+                                        <i class="fas fa-chart-line text-purple-600 text-2xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Progress</p>
+                                    </button>
+                                    <button class="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-center transition duration-200">
+                                        <i class="fas fa-cog text-orange-600 text-2xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Settings</p>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming Workouts -->
+                            <div class="dashboard-card p-6">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">Upcoming Workouts</h2>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-running text-white text-sm"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-800">Cardio Blast</p>
+                                                <p class="text-xs text-gray-600">Tomorrow, 7:00 AM</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">25 min</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-dumbbell text-white text-sm"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-800">Upper Body</p>
+                                                <p class="text-xs text-gray-600">Wed, 6:30 PM</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">40 min</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <!-- Header -->
+                <header class="bg-white shadow-sm border-b border-gray-200">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between items-center py-4">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
+                                <p class="text-gray-500">Manage your personal information and fitness goals</p>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <button class="relative p-2 text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-bell text-xl"></i>
+                                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
+                                </button>
+                                <div class="relative">
+                                    <button class="flex items-center text-sm focus:outline-none">
+                                        <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Profile Content -->
+                <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="profile-content">
+                        <!-- Sidebar -->
+                        <div class="profile-sidebar">
+                            <!-- User Info Card -->
+                            <div class="profile-card user-info-box">
+                                <div class="profile-image-container">
+                                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Profile Image" class="profile-image" id="profile-image">
+                                    <div class="upload-overlay" id="upload-trigger">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                                <h2 class="username" id="display-username">Alex Johnson</h2>
+                                <p class="user-title">Fitness Enthusiast</p>
+                                
+                                <div class="gender-display">
+                                    <i class="fas fa-venus-mars gender-icon male" id="gender-icon"></i>
+                                    <span id="gender-text">Male</span>
+                                </div>                    
+                                <div class="action-buttons">
+                                    <button class="btn btn-secondary">
+                                        <i class="fas fa-running"></i> My Exercise Diary
+                                    </button>
+                                    <button class="btn btn-secondary">
+                                        <i class="fas fa-utensils"></i> My Food Diary
+                                    </button>
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-share-alt"></i> Share Profile
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- About Me Card -->
+                            <div class="profile-card about-me-box">
+                                <h3 class="section-title">
+                                    <i class="fas fa-user"></i> About Me
+                                </h3>
+                                <p class="section-content editable" id="about-me-text" data-field="about">
+                                    Fitness enthusiast with a passion for weight training and healthy nutrition. 
+                                    Currently working towards improving my strength and building muscle mass. 
+                                    I believe consistency is the key to achieving fitness goals.
+                                </p>
+                            </div>
+
+                            <!-- Goals Card -->
+                            <div class="profile-card about-me-box">
+                                <h3 class="section-title">
+                                    <i class="fas fa-bullseye"></i> My Fitness Goals
+                                </h3>
+                                <p class="section-content editable" id="fitness-goals-text" data-field="goals">
+                                    • Gain 5kg of lean muscle mass<br>
+                                    • Reduce body fat to 12%<br>
+                                    • Bench press 100kg<br>
+                                    • Run a half marathon<br>
+                                    • Improve flexibility and mobility
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="profile-details">
+                            <!-- Metrics Card -->
+                            <div class="profile-card metrics-box">
+                                <h3 class="section-title">
+                                    <i class="fas fa-chart-line"></i> Personal Metrics
+                                </h3>
+                                <div class="metric-grid">
+                                    <div class="metric-row">
+                                        <span class="metric-label">Full Name</span>
+                                        <span class="metric-value editable" id="full-name" data-field="fullName">Alex Johnson</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Email</span>
+                                        <span class="metric-value editable" id="email" data-field="email">alex.j@example.com</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Gender</span>
+                                        <span class="metric-value editable" id="gender" data-field="gender">Male</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Activity Level</span>
+                                        <span class="metric-value editable" id="activity-level" data-field="activityLevel">Active</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Current Weight</span>
+                                        <span class="metric-value editable" id="current-weight" data-field="currentWeight">75 kg</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Goal Weight</span>
+                                        <span class="metric-value editable" id="goal-weight" data-field="goalWeight">80 kg</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Height</span>
+                                        <span class="metric-value editable" id="height" data-field="height">180 cm</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Daily Protein Goal</span>
+                                        <span class="metric-value editable" id="protein-goal" data-field="proteinGoal">150 g</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Card -->
+                            <div class="profile-card metrics-box">
+                                <h3 class="section-title">
+                                    <i class="fas fa-tasks"></i> Progress Tracking
+                                </h3>
+                                <div class="progress-section">
+                                    <div class="progress-header">
+                                        <span class="progress-label">Weekly Workout Goal</span>
+                                        <span class="progress-percentage">85%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-section" style="margin-top: 20px;">
+                                    <div class="progress-header">
+                                        <span class="progress-label">Nutrition Target</span>
+                                        <span class="progress-percentage">72%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 72%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-section" style="margin-top: 20px;">
+                                    <div class="progress-header">
+                                        <span class="progress-label">Weight Goal Progress</span>
+                                        <span class="progress-percentage">60%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Goals Overview -->
+                            <div class="profile-card metrics-box">
+                                <h3 class="section-title">
+                                    <i class="fas fa-trophy"></i> Goals Overview
+                                </h3>
+                                <div class="goals-box">
+                                    <div class="goal-card">
+                                        <div class="goal-icon">
+                                            <i class="fas fa-weight"></i>
+                                        </div>
+                                        <div class="goal-title">Weight Goal</div>
+                                        <div class="goal-value">5/8 kg</div>
+                                    </div>
+                                    <div class="goal-card">
+                                        <div class="goal-icon">
+                                            <i class="fas fa-dumbbell"></i>
+                                        </div>
+                                        <div class="goal-title">Strength Goal</div>
+                                        <div class="goal-value">70%</div>
+                                    </div>
+                                    <div class="goal-card">
+                                        <div class="goal-icon">
+                                            <i class="fas fa-running"></i>
+                                        </div>
+                                        <div class="goal-title">Cardio Goal</div>
+                                        <div class="goal-value">80%</div>
+                                    </div>
+                                    <div class="goal-card">
+                                        <div class="goal-icon">
+                                            <i class="fas fa-apple-alt"></i>
+                                        </div>
+                                        <div class="goal-title">Nutrition Goal</div>
+                                        <div class="goal-value">65%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
         </div>
+    </div>
 
-        <div class="footer-section footer-legal">
-            <h4>Legal</h4>
-            <a href="terms.html">Terms of Service</a>
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="sitemap.html">Sitemap</a>
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label class="form-label" for="edit-username">Username</label>
+                    <input type="text" class="form-control" id="edit-username" value="Alex Johnson">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-email">Email</label>
+                    <input type="email" class="form-control" id="edit-email" value="alex.j@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <div class="gender-options">
+                        <div class="gender-option" data-gender="male">
+                            <i class="fas fa-mars male"></i>
+                            <div>Male</div>
+                        </div>
+                        <div class="gender-option" data-gender="female">
+                            <i class="fas fa-venus female"></i>
+                            <div>Female</div>
+                        </div>
+                        <div class="gender-option" data-gender="other">
+                            <i class="fas fa-transgender other"></i>
+                            <div>Other</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-about">About Me</label>
+                    <textarea class="form-control" id="edit-about" rows="3">Fitness enthusiast with a passion for weight training and healthy nutrition. Currently working towards improving my strength and building muscle mass.</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-goals">Fitness Goals</label>
+                    <textarea class="form-control" id="edit-goals" rows="3">• Gain 5kg of lean muscle mass
+• Reduce body fat to 12%
+• Bench press 100kg
+• Run a half marathon
+• Improve flexibility and mobility</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-weight">Current Weight (kg)</label>
+                    <input type="number" class="form-control" id="edit-weight" value="75">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-goal-weight">Goal Weight (kg)</label>
+                    <input type="number" class="form-control" id="edit-goal-weight" value="80">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-protein">Daily Protein Goal (g)</label>
+                    <input type="number" class="form-control" id="edit-protein" value="150">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
         </div>
-    </footer>
+    </div>
 
-    <!-- ... rest of your code ... -->
+    <!-- Profile Picture Upload Modal -->
+    <div class="modal" id="upload-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Profile Picture</h3>
+                <button class="close-modal" id="close-upload-modal">&times;</button>
+            </div>
+            <div style="text-align: center; padding: 20px;">
+                <div class="profile-image-container" style="margin: 0 auto 20px;">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Profile Image" class="profile-image" id="upload-preview">
+                </div>
+                <p style="margin-bottom: 20px; color: #666;">Upload a new profile picture</p>
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                <button class="btn btn-secondary" id="browse-btn" style="margin-bottom: 15px;">
+                    <i class="fas fa-folder-open"></i> Browse Files
+                </button>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-upload">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-picture">Save Picture</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="js/dashboard.js"></script>
-    <!-- Note: auth.js is not needed here as dashboard.js handles the auth check -->
+    <!-- Inline Edit Modal -->
+    <div class="modal" id="inline-edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="inline-edit-title">Edit Field</h3>
+                <button class="close-modal" id="close-inline-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label" id="inline-edit-label">Value</label>
+                <input type="text" class="form-control" id="inline-edit-input">
+                <select class="form-control" id="inline-edit-select" style="display: none;">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select class="form-control" id="inline-edit-activity" style="display: none;">
+                    <option value="Sedentary">Sedentary</option>
+                    <option value="Lightly Active">Lightly Active</option>
+                    <option value="Active">Active</option>
+                    <option value="Very Active">Very Active</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-inline-edit">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-inline-edit">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">Profile updated successfully!</div>
+
+    <script>
+        // Page Navigation
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // Close mobile menu after clicking a link
+            if (window.innerWidth < 768) {
+                document.querySelector('.sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
+        }
+        
+        // Initialize page navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('data-page');
+                if (pageId) {
+                    showPage(pageId);
+                }
+            });
+        });
+
+        // Mobile menu functionality
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        document.getElementById('overlay').addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Initialize progress ring animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const circle = document.querySelector('.progress-ring-circle');
+            if (circle) {
+                const radius = circle.r.baseVal.value;
+                const circumference = radius * 2 * Math.PI;
+
+                circle.style.strokeDasharray = `${circumference} ${circumference}`;
+                circle.style.strokeDashoffset = circumference;
+
+                // Animate to 70% progress
+                const offset = circumference - (70 / 100) * circumference;
+                setTimeout(() => {
+                    circle.style.strokeDashoffset = offset;
+                }, 500);
+            }
+        });
+
+        // Profile Page Functionality
+        // User data storage
+        let userData = {
+            fullName: "Alex Johnson",
+            email: "alex.j@example.com",
+            gender: "Male",
+            activityLevel: "Active",
+            currentWeight: "75 kg",
+            goalWeight: "80 kg",
+            height: "180 cm",
+            proteinGoal: "150 g",
+            about: "Fitness enthusiast with a passion for weight training and healthy nutrition. Currently working towards improving my strength and building muscle mass. I believe consistency is the key to achieving fitness goals.",
+            goals: "• Gain 5kg of lean muscle mass<br>• Reduce body fat to 12%<br>• Bench press 100kg<br>• Run a half marathon<br>• Improve flexibility and mobility"
+        };
+
+        // DOM Elements
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const closeModal = document.getElementById('close-modal');
+        const cancelEdit = document.getElementById('cancel-edit');
+        const profileForm = document.getElementById('profile-form');
+        const uploadTrigger = document.getElementById('upload-trigger');
+        const uploadModal = document.getElementById('upload-modal');
+        const closeUploadModal = document.getElementById('close-upload-modal');
+        const cancelUpload = document.getElementById('cancel-upload');
+        const browseBtn = document.getElementById('browse-btn');
+        const fileInput = document.getElementById('file-input');
+        const uploadPreview = document.getElementById('upload-preview');
+        const savePictureBtn = document.getElementById('save-picture');
+        const profileImage = document.getElementById('profile-image');
+        const inlineEditModal = document.getElementById('inline-edit-modal');
+        const closeInlineModal = document.getElementById('close-inline-modal');
+        const cancelInlineEdit = document.getElementById('cancel-inline-edit');
+        const saveInlineEdit = document.getElementById('save-inline-edit');
+        const inlineEditInput = document.getElementById('inline-edit-input');
+        const inlineEditSelect = document.getElementById('inline-edit-select');
+        const inlineEditActivity = document.getElementById('inline-edit-activity');
+        const inlineEditTitle = document.getElementById('inline-edit-title');
+        const inlineEditLabel = document.getElementById('inline-edit-label');
+        const notification = document.getElementById('notification');
+        const genderOptions = document.querySelectorAll('.gender-option');
+        const genderIcon = document.getElementById('gender-icon');
+        const genderText = document.getElementById('gender-text');
+
+        let currentEditingField = null;
+
+        // Initialize profile with user data
+        function initializeProfile() {
+            document.getElementById('display-username').textContent = userData.fullName;
+            document.getElementById('full-name').textContent = userData.fullName;
+            document.getElementById('email').textContent = userData.email;
+            document.getElementById('gender').textContent = userData.gender;
+            document.getElementById('activity-level').textContent = userData.activityLevel;
+            document.getElementById('current-weight').textContent = userData.currentWeight;
+            document.getElementById('goal-weight').textContent = userData.goalWeight;
+            document.getElementById('height').textContent = userData.height;
+            document.getElementById('protein-goal').textContent = userData.proteinGoal;
+            document.getElementById('about-me-text').innerHTML = userData.about;
+            document.getElementById('fitness-goals-text').innerHTML = userData.goals;
+            
+            // Update gender display
+            updateGenderDisplay(userData.gender);
+            
+            // Initialize form values
+            document.getElementById('edit-username').value = userData.fullName;
+            document.getElementById('edit-email').value = userData.email;
+            document.getElementById('edit-about').value = userData.about.replace(/<br>/g, '\n');
+            document.getElementById('edit-goals').value = userData.goals.replace(/<br>/g, '\n');
+            document.getElementById('edit-weight').value = userData.currentWeight.replace(' kg', '');
+            document.getElementById('edit-goal-weight').value = userData.goalWeight.replace(' kg', '');
+            document.getElementById('edit-protein').value = userData.proteinGoal.replace(' g', '');
+            
+            // Set selected gender in modal
+            genderOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.getAttribute('data-gender') === userData.gender.toLowerCase()) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        // Update gender display with icons and colors
+        function updateGenderDisplay(gender) {
+            genderText.textContent = gender;
+            
+            // Update icon and color based on gender
+            if (gender === 'Male') {
+                genderIcon.className = 'fas fa-mars gender-icon male';
+                genderIcon.style.color = '#2196F3';
+            } else if (gender === 'Female') {
+                genderIcon.className = 'fas fa-venus gender-icon female';
+                genderIcon.style.color = '#E91E63';
+            } else {
+                genderIcon.className = 'fas fa-transgender gender-icon other';
+                genderIcon.style.color = '#9C27B0';
+            }
+        }
+
+        // Gender selection in modal
+        genderOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                genderOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+
+        // Open Edit Profile Modal
+        if (editProfileBtn) {
+            editProfileBtn.addEventListener('click', () => {
+                editProfileModal.style.display = 'flex';
+            });
+        }
+
+        // Close Edit Profile Modal
+        closeModal.addEventListener('click', () => {
+            editProfileModal.style.display = 'none';
+        });
+
+        cancelEdit.addEventListener('click', () => {
+            editProfileModal.style.display = 'none';
+        });
+
+        // Open Upload Modal
+        uploadTrigger.addEventListener('click', () => {
+            uploadModal.style.display = 'flex';
+        });
+
+        // Close Upload Modal
+        closeUploadModal.addEventListener('click', () => {
+            uploadModal.style.display = 'none';
+        });
+
+        cancelUpload.addEventListener('click', () => {
+            uploadModal.style.display = 'none';
+        });
+
+        // Browse for image
+        browseBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Preview selected image
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save new profile picture
+        savePictureBtn.addEventListener('click', () => {
+            profileImage.src = uploadPreview.src;
+            uploadModal.style.display = 'none';
+            showNotification('Profile picture updated successfully!');
+        });
+
+        // Handle form submission
+        profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get selected gender
+            const selectedGender = document.querySelector('.gender-option.selected').getAttribute('data-gender');
+            const genderDisplay = selectedGender.charAt(0).toUpperCase() + selectedGender.slice(1);
+            
+            // Update user data
+            userData.fullName = document.getElementById('edit-username').value;
+            userData.email = document.getElementById('edit-email').value;
+            userData.gender = genderDisplay;
+            userData.about = document.getElementById('edit-about').value.replace(/\n/g, '<br>');
+            userData.goals = document.getElementById('edit-goals').value.replace(/\n/g, '<br>');
+            userData.currentWeight = document.getElementById('edit-weight').value + ' kg';
+            userData.goalWeight = document.getElementById('edit-goal-weight').value + ' kg';
+            userData.proteinGoal = document.getElementById('edit-protein').value + ' g';
+            
+            // Update profile display
+            initializeProfile();
+            
+            editProfileModal.style.display = 'none';
+            showNotification('Profile updated successfully!');
+        });
+
+        // Inline editing functionality
+        document.querySelectorAll('.editable').forEach(element => {
+            element.addEventListener('click', (e) => {
+                const field = e.target.getAttribute('data-field');
+                const currentValue = e.target.textContent || e.target.innerHTML;
+                
+                openInlineEditModal(field, currentValue, e.target);
+            });
+        });
+
+        function openInlineEditModal(field, value, element) {
+            currentEditingField = { field, element };
+            inlineEditTitle.textContent = `Edit ${field.replace(/([A-Z])/g, ' $1')}`;
+            inlineEditLabel.textContent = field.replace(/([A-Z])/g, ' $1');
+            
+            // Hide all input types first
+            inlineEditInput.style.display = 'none';
+            inlineEditSelect.style.display = 'none';
+            inlineEditActivity.style.display = 'none';
+            
+            // Show appropriate input based on field type
+            if (field === 'gender') {
+                inlineEditSelect.style.display = 'block';
+                inlineEditSelect.value = value;
+            } else if (field === 'activityLevel') {
+                inlineEditActivity.style.display = 'block';
+                inlineEditActivity.value = value;
+            } else {
+                inlineEditInput.style.display = 'block';
+                inlineEditInput.value = field === 'about' || field === 'goals' 
+                    ? value.replace(/<br>/g, '\n') 
+                    : value.replace(' kg', '').replace(' g', '').replace(' cm', '');
+            }
+            
+            inlineEditModal.style.display = 'flex';
+        }
+
+        // Save inline edit
+        saveInlineEdit.addEventListener('click', () => {
+            if (!currentEditingField) return;
+            
+            const { field, element } = currentEditingField;
+            let newValue;
+            
+            if (field === 'gender') {
+                newValue = inlineEditSelect.value;
+                updateGenderDisplay(newValue);
+            } else if (field === 'activityLevel') {
+                newValue = inlineEditActivity.value;
+            } else {
+                newValue = inlineEditInput.value;
+                
+                // Add units if needed
+                if (field === 'currentWeight' || field === 'goalWeight') {
+                    newValue += ' kg';
+                } else if (field === 'proteinGoal') {
+                    newValue += ' g';
+                } else if (field === 'height') {
+                    newValue += ' cm';
+                } else if (field === 'about' || field === 'goals') {
+                    newValue = newValue.replace(/\n/g, '<br>');
+                }
+            }
+            
+            // Update user data
+            userData[field] = newValue;
+            
+            // Update display
+            if (field === 'about' || field === 'goals') {
+                element.innerHTML = newValue;
+            } else {
+                element.textContent = newValue;
+            }
+            
+            // Special case for username
+            if (field === 'fullName') {
+                document.getElementById('display-username').textContent = newValue;
+            }
+            
+            inlineEditModal.style.display = 'none';
+            showNotification('Profile updated successfully!');
+        });
+
+        // Close inline edit modal
+        closeInlineModal.addEventListener('click', () => {
+            inlineEditModal.style.display = 'none';
+        });
+
+        cancelInlineEdit.addEventListener('click', () => {
+            inlineEditModal.style.display = 'none';
+        });
+
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === editProfileModal) {
+                editProfileModal.style.display = 'none';
+            }
+            if (e.target === uploadModal) {
+                uploadModal.style.display = 'none';
+            }
+            if (e.target === inlineEditModal) {
+                inlineEditModal.style.display = 'none';
+            }
+        });
+
+        // Initialize the profile when page loads
+        document.addEventListener('DOMContentLoaded', initializeProfile);
+    </script>
 </body>
 </html>

@@ -3,113 +3,658 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Discussions</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>CommunityHub | Connect & Grow Together</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2.8rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3aa8d0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            background: linear-gradient(rgba(67, 97, 238, 0.9), rgba(63, 55, 201, 0.9)), url('https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Community Stats */
+        .stats {
+            background-color: white;
+            padding: 3rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+        }
+
+        /* Events Section */
+        .events {
+            padding: 5rem 0;
+            background-color: var(--light);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-date {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-card p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .testimonial-card:before {
+            content: """;
+            font-size: 5rem;
+            color: var(--light-gray);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            line-height: 1;
+        }
+
+        .testimonial-content {
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            color: var(--dark);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-right: 1rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-light:hover {
+            background: var(--light-gray);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-tagline {
+            max-width: 500px;
+            margin-bottom: 2rem;
+            color: #adb5bd;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons, .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-item {
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <!-- NAVBAR CONTAINER (Reused) -->
-    <header class="navbar-container">
-        <div class="logo">MyFitnessApp</div>
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="profile.html">Profile</a>
-            <a href="workout.html">Workout</a>
-            <a href="nutrition.html">Nutrition</a>
-            <a href="community.html">Community</a>
-            <a href="blog.html">Blog</a>
-        </nav>
-        <div class="auth-status">
-            <span id="welcome-message" class="hidden-initial">Hi admin</span>
-            <a href="login.html" id="login-link" class="hidden-initial">Login</a>
-            <a href="#" id="logout-link">Logout</a>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-users"></i>
+                CommunityHub
+            </div>
+            <p class="tagline">Connect with like-minded individuals, share knowledge, and grow together in our supportive community</p>
         </div>
     </header>
 
-    <!-- MAIN CONTENT AREA -->
-    <main class="dashboard-content community-page">
-        <div class="breadcrumb">
-            <a href="index.html">Home</a> / Community Forum
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Join Our Thriving Community</h1>
+            <p>Connect with like-minded individuals, share knowledge, and grow together in a supportive environment designed for collaboration and success.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Join Now</a>
+                <a href="#" class="btn btn-outline">Learn More</a>
+            </div>
         </div>
-        
-        <h1 class="main-heading">Community Support and Discussions</h1>
+    </section>
 
-        <div class="community-grid">
-            <!-- LEFT COLUMN: New Post Form & Filters -->
-            <aside class="community-sidebar">
-                <div class="profile-card new-post-box">
-                    <h3>Create a New Post</h3>
-                    <form id="new-post-form" class="post-form">
-                        <input type="text" id="post-title" placeholder="Topic Title (e.g., Best protein for recovery)" required title="Post Title">
-                        
-                        <select id="post-category" required title="Post Category">
-                            <option value="">Select Category</option>
-                            <option value="nutrition">Nutrition</option>
-                            <option value="workout">Workouts</option>
-                            <option value="motivation">Motivation</option>
-                            <option value="general">General</option>
-                        </select>
-
-                        <textarea id="post-content" placeholder="Share your thoughts or ask a question..." required title="Post Content"></textarea>
-                        
-                        <button type="submit" class="diary-button primary">Post to Forum</button>
-                    </form>
+    <!-- Community Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Active Members</div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Events Hosted</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Interest Groups</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="profile-card filter-box">
-                    <h3>Filter Discussions</h3>
-                    <div id="category-filters" class="category-filters">
-                        <button class="filter-btn active" data-category="all">All Topics</button>
-                        <button class="filter-btn" data-category="nutrition">Nutrition</button>
-                        <button class="filter-btn" data-category="workout">Workouts</button>
-                        <button class="filter-btn" data-category="motivation">Motivation</button>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Join Our Community?</h2>
+                <p>Discover the benefits of being part of our vibrant community</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Networking Opportunities</h3>
+                    <p>Connect with professionals, experts, and enthusiasts in your field. Build meaningful relationships that can advance your career and personal growth.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Learning Resources</h3>
+                    <p>Access exclusive workshops, tutorials, and knowledge-sharing sessions. Learn new skills and stay updated with the latest trends in your industry.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Exclusive Events</h3>
+                    <p>Participate in member-only events, webinars, and meetups. Get firsthand insights from industry leaders and pioneers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events">
+        <div class="container">
+            <div class="section-title">
+                <h2>Upcoming Events</h2>
+                <p>Join our upcoming community gatherings and activities</p>
+            </div>
+            <div class="events-grid">
+                <div class="event-card">
+                    <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="event-content">
+                        <span class="event-date">June 15, 2023</span>
+                        <h3>Community Networking Mixer</h3>
+                        <p>Connect with fellow members in a relaxed setting. Perfect for making new connections and strengthening existing ones.</p>
+                        <a href="#" class="btn btn-primary">Register Now</a>
                     </div>
                 </div>
-            </aside>
-            
-            <!-- RIGHT COLUMN: Discussion List -->
-            <section class="discussion-area">
-                <div id="discussion-list" class="discussion-list">
-                    <!-- Posts will be loaded here by JavaScript -->
-                    <p id="posts-loading-message">Loading discussion threads...</p>
+                <div class="event-card">
+                    <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="event-content">
+                        <span class="event-date">June 22, 2023</span>
+                        <h3>Industry Insights Workshop</h3>
+                        <p>Learn from industry experts about the latest trends and developments. Gain practical knowledge you can apply immediately.</p>
+                        <a href="#" class="btn btn-primary">Register Now</a>
+                    </div>
                 </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- FOOTER (Reused) -->
-    <footer class="app-footer">
-        <div class="footer-inner-content">
-            <div class="footer-left">
-                <div class="logo">MyFitnessApp</div>
-                <p>Losing weight isn't easy - we know. But with MyFitnessApp, you'll get the tools you need to successfully...</p>
+                <div class="event-card">
+                    <div class="event-image" style="background-image: url('https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="event-content">
+                        <span class="event-date">June 30, 2023</span>
+                        <h3>Community Service Day</h3>
+                        <p>Join us as we give back to our local community. A day of volunteering and making a positive impact together.</p>
+                        <a href="#" class="btn btn-primary">Register Now</a>
+                    </div>
+                </div>
             </div>
-            
-            <div class="footer-sections">
-                <div class="footer-section">
-                    <h4>SPECIAL THANKS TO</h4>
-                    <p><a href="#">myfitnesspal.com</a></p>
-                    <p><a href="#">muscleandstrength.com</a></p>
-                    <p><a href="#">bodybuilding.com</a></p>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>USEFUL LINKS</h4>
-                    <p><a href="#">Open Source System</a></p>
-                    <p><a href="#">YouTube Terms of Service</a></p>
-                </div>
+        </div>
+    </section>
 
-                <div class="footer-section">
-                    <h4>CONTACT</h4>
-                    <p>Dimitrovgrad, Bulgaria</p>
-                    <p>info@myfitness-app.com</p>
-                    <p>+ 000 000 000 000</p>
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Members Say</h2>
+                <p>Hear from community members about their experiences</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "This community has completely transformed my professional network. I've met incredible people who have become both friends and collaborators."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Alex Johnson</h4>
+                            <p>Software Developer</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "The knowledge sharing in this community is phenomenal. I've learned so much from the workshops and discussions that I've applied directly to my work."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Maria Rodriguez</h4>
+                            <p>Marketing Manager</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "Being part of this community gave me the confidence to start my own business. The support and guidance I received were invaluable."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>James Wilson</h4>
+                            <p>Entrepreneur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Join Our Community?</h2>
+            <p>Become part of our growing network today and start connecting, learning, and growing with like-minded individuals.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-light">Create Account</a>
+                <a href="#" class="btn btn-outline">Schedule a Tour</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-users"></i> CommunityHub
+                </div>
+                <p class="footer-tagline">Building connections that matter. Join our community to grow personally and professionally.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CommunityHub. All rights reserved. | Connect & Grow Together</p>
             </div>
         </div>
     </footer>
-    
-    <script src="js/dashboard.js"></script> 
-    <script src="js/community.js"></script> <!-- NEW SCRIPT for community logic -->
 </body>
 </html>
